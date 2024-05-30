@@ -1,0 +1,22 @@
+version: "3.4"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "127.0.0.1:5253:5253"
+      #- "127.0.0.1:443:443"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:5253
+      - ConnectionStrings__DefaultConnection=Data Source=../data/rankt_docker.db
+      - AppSetup__AdminUsername=admin
+      - AppSetup__AdminPassword=admin
+      #- ASPNETCORE_URLS=https://+:443
+      #- ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      #- ASPNETCORE_Kestrel__Certificates__Default__Password=defaultPassword
+    volumes:
+      - ./Data:/data
+      #- ./https:/https
