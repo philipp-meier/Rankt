@@ -1,6 +1,6 @@
 # Rankt
 
-Simple application for creating and executing ranking surveys.
+Simple application for creating and executing ranking surveys.  
 
 ## Status
 
@@ -11,6 +11,14 @@ There are still many features that are missing (see [Feature wishlist](#feature-
 
 If you want to contribute, feel free to create a pull request or an issue to talk about the change you want to make to
 ensure that you do not waste your time when implementing it.
+
+## Getting started
+
+Once you have cloned this repository, you can simply run `docker compose up` and go to http://localhost:5253/.  
+You can find the dev-credentials (admin/admin) in the `docker-compose.yml` file of this repository.
+
+If you want to run this application without docker, you can just execute `dotnet run` and go to https://localhost:7151/
+or https://localhost:7151/swagger, if you are interested in the OpenAPI documentation.
 
 ## Preview (beta - 30.05.2024)
 
@@ -25,14 +33,6 @@ ensure that you do not waste your time when implementing it.
 ### Result
 
 <kbd><img src="./Data/Images/RankingQuestionResult.png" alt="Ranking Question Result"></kbd>
-
-## Getting started
-
-Once you have cloned this repository, you can simply run `docker compose up` and go to http://localhost:5253/.  
-You can find the dev-credentials in the `docker-compose.yml` file of this repository.
-
-If you want to run this application without docker, you can just execute `dotnet run` and go to https://localhost:7151/
-or https://localhost:7151/swagger, if you are interested in the OpenAPI documentation.
 
 ## Documentation
 
