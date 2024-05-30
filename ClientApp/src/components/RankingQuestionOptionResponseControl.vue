@@ -16,7 +16,7 @@ const emit = defineEmits(['voted']);
 
 const toast = useToast();
 
-const maxItemsToVote = props.question.maxSelectableItems!;
+const maxItemsToVote = props.question.maxSelectableItems ?? props.question.options!.length;
 const options: Ref<IRankingQuestionOption[]> = ref([...props.question.options!]);
 const loading = ref(false);
 
