@@ -1,17 +1,24 @@
 # Rankt
 
-Simple application for creating and executing ranking surveys.
+Simple application for creating and executing ranking surveys.  
 
 ## Status
 
 This application started as a learning project for me to get familiar with some new [Vue 3](https://vuejs.org/)
 features, [PrimeVue](https://primevue.org/), ASP.NET Identity and some other features I wanted to try out.
 
-There are still many features that are missing (
-see [Feature wishlist](#feature-wishlist) / [Documentation](#documentation)) or need to be refactored / cleaned up.
+There are still many features that are missing (see [Feature wishlist](#feature-wishlist) / [Documentation](#documentation)) or need to be refactored / cleaned up.
 
 If you want to contribute, feel free to create a pull request or an issue to talk about the change you want to make to
 ensure that you do not waste your time when implementing it.
+
+## Getting started
+
+Once you have cloned this repository, you can simply run `docker compose up` and go to http://localhost:5253/.  
+You can find the dev-credentials (admin/admin) in the `docker-compose.yml` file of this repository.
+
+If you want to run this application without docker, you can just execute `dotnet run` and go to https://localhost:7151/
+or https://localhost:7151/swagger, if you are interested in the OpenAPI documentation.
 
 ## Preview (beta - 30.05.2024)
 
@@ -26,14 +33,6 @@ ensure that you do not waste your time when implementing it.
 ### Result
 
 <kbd><img src="./Data/Images/RankingQuestionResult.png" alt="Ranking Question Result"></kbd>
-
-## Getting started
-
-Once you have cloned this repository, you can simply run `docker compose up` and go to http://localhost:5253/.  
-You can find the dev-credentials in the `docker-compose.yml` file of this repository.
-
-If you want to run this application without docker, you can just execute `dotnet run` and go to https://localhost:7151/
-or https://localhost:7151/swagger, if you are interested in the OpenAPI documentation.
 
 ## Documentation
 
@@ -135,5 +134,7 @@ Furthermore, he should also be able to change his password and log out.
 - Being able to export the result and (maybe) get it into a Markdown wiki.
 - Option to dismiss a survey option entirely (e.g., if it is not important = 0 points)
 - "Confidential type": Define whether users should be able to see which user has voted which option.
-- E2E tests similar
-  to [Chrono's E2E tests](https://github.com/philipp-meier/Chrono/blob/main/src/Chrono.Tests/E2E/00_E2ETestBase.cs).
+- E2E tests similar to [Chrono's E2E tests](https://github.com/philipp-meier/Chrono/blob/main/src/Chrono.Tests/E2E/00_E2ETestBase.cs).
+- Remove the `TODO`s.
+- Improve the [RankingQuestionOptionEditList](https://github.com/philipp-meier/Rankt/blob/main/ClientApp/src/components/RankingQuestionOptionEditList.vue) and make it more user-friendly and responsive.
+
