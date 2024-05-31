@@ -1,0 +1,21 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/ClientApp"
+    schedule:
+      interval: "monthly"
+    target-branch: "develop"
+    groups:
+      dependencies:
+        patterns:
+          - "*"
+
+  - package-ecosystem: "nuget"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    target-branch: "develop"
+    groups:
+      dependencies:
+        patterns:
+          - "*"
