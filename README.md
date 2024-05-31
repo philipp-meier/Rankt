@@ -1,5 +1,6 @@
 # :postbox: Rankt
 
+[![CI](https://github.com/philipp-meier/Rankt/actions/workflows/dotnet.yml/badge.svg?branch=main)](https://github.com/philipp-meier/Rankt/actions/workflows/dotnet.yml)
 [![CodeScene Code Health](https://codescene.io/projects/54502/status-badges/code-health)](https://codescene.io/)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://github.com/philipp-meier/Rankt/blob/main/LICENSE)
 
