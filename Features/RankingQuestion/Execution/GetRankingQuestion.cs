@@ -1,17 +1,16 @@
 using System.Security.Claims;
-using Carter;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Rankt.Entities;
 using Rankt.Infrastructure.Persistence;
 
-namespace Rankt.Features.RankingQuestion;
+namespace Rankt.Features.RankingQuestion.Execution;
 
-public class GetRankingQuestionModule : ICarterModule
+internal static class GetRankingQuestionEndpoint
 {
-    public void AddRoutes(IEndpointRouteBuilder app)
+    internal static void MapGetRankingQuestionEndpoint(this IEndpointRouteBuilder app)
     {
-        app.MapMethods("api/questions/{id:guid}", ["HEAD"], async (Guid id,
+        app.MapMethods("questions/{id:guid}", ["HEAD"], async (Guid id,
             ApplicationDbContext dbContext, ClaimsPrincipal claimsPrincipal, UserManager<IdentityUser> userManager,
             CancellationToken cancellationToken) =>
         {
@@ -25,7 +24,7 @@ public class GetRankingQuestionModule : ICarterModule
             return rankingQuestion != null ? Results.Ok() : Results.NotFound();
         }).RequireRateLimiting("fixed").AllowAnonymous();
 
-        app.MapGet("api/questions/{id:guid}", async (Guid id, ApplicationDbContext dbContext,
+        app.MapGet("questions/{id:guid}", async (Guid id, ApplicationDbContext dbContext,
             ClaimsPrincipal claimsPrincipal, UserManager<IdentityUser> userManager,
             CancellationToken cancellationToken) =>
         {
@@ -51,24 +50,24 @@ public class GetRankingQuestionModule : ICarterModule
                     Identifier = x.ExternalIdentifier, Title = x.Title, Description = x.Description
                 }).ToList()
             };
-        }).RequireRateLimiting("fixed").AllowAnonymous();
+        });
     }
-}
 
-public record GetRankingQuestionResponse
-{
-    public Guid Identifier { get; set; }
-    public required string Title { get; set; }
-    public required string Status { get; set; }
-    public required int ResponseCount { get; set; }
-    public required DateTime Created { get; set; }
-    public int? MaxSelectableItems { get; set; }
-    public IList<GetRankingQuestionOptionResponse> Options { get; set; } = [];
-}
+    private record GetRankingQuestionResponse
+    {
+        public Guid Identifier { get; set; }
+        public required string Title { get; set; }
+        public required string Status { get; set; }
+        public required int ResponseCount { get; set; }
+        public required DateTime Created { get; set; }
+        public int? MaxSelectableItems { get; set; }
+        public IList<GetRankingQuestionOptionResponse> Options { get; set; } = [];
+    }
 
-public record GetRankingQuestionOptionResponse
-{
-    public required string Title { get; set; }
-    public string? Description { get; set; }
-    public Guid Identifier { get; set; }
+    private record GetRankingQuestionOptionResponse
+    {
+        public required string Title { get; set; }
+        public string? Description { get; set; }
+        public Guid Identifier { get; set; }
+    }
 }

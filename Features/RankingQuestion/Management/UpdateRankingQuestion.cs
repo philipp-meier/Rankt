@@ -1,32 +1,17 @@
 using System.Security.Claims;
-using Carter;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Rankt.Entities;
 using Rankt.Infrastructure.Persistence;
 
-namespace Rankt.Features.RankingQuestion;
+namespace Rankt.Features.RankingQuestion.Management;
 
-public record UpdateRankingQuestionRequest
+internal static class UpdateRankingQuestionEndpoint
 {
-    public required string Title { get; set; }
-    public int? MaxSelectableItems { get; set; }
-    public List<UpdateRankingQuestionOptionRequest> Options { get; set; } = [];
-}
-
-public record UpdateRankingQuestionOptionRequest
-{
-    public Guid? Identifier { get; set; }
-    public required string Title { get; set; }
-    public string? Description { get; set; }
-}
-
-public class UpdateRankingQuestion : ICarterModule
-{
-    public void AddRoutes(IEndpointRouteBuilder app)
+    internal static void MapUpdateRankingQuestionEndpoint(this IEndpointRouteBuilder app)
     {
-        app.MapPost("api/questions/{id:guid}", async (Guid id, UpdateRankingQuestionRequest request,
+        app.MapPost("questions/{id:guid}", async (Guid id, UpdateRankingQuestionRequest request,
             ApplicationDbContext dbContext,
             ClaimsPrincipal claimsPrincipal, CancellationToken cancellationToken, [FromServices] IServiceProvider sp) =>
         {
@@ -101,6 +86,13 @@ public class UpdateRankingQuestion : ICarterModule
             await dbContext.SaveChangesAsync(cancellationToken);
 
             return Results.Ok();
-        }).RequireAuthorization();
+        });
     }
+
+    private record UpdateRankingQuestionRequest(
+        string Title,
+        int? MaxSelectableItems,
+        List<UpdateRankingQuestionOptionRequest> Options);
+
+    private record UpdateRankingQuestionOptionRequest(Guid? Identifier, string Title, string? Description);
 }

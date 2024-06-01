@@ -1,17 +1,16 @@
 using System.Security.Claims;
-using Carter;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Rankt.Entities;
 using Rankt.Infrastructure.Persistence;
 
-namespace Rankt.Features.RankingQuestion;
+namespace Rankt.Features.RankingQuestion.Execution;
 
-public class GetRankingQuestionResultModule : ICarterModule
+internal static class GetRankingQuestionResultEndpoint
 {
-    public void AddRoutes(IEndpointRouteBuilder app)
+    internal static void MapGetRankingQuestionResultEndpoint(this IEndpointRouteBuilder app)
     {
-        app.MapMethods("api/questions/{id:guid}/result", ["HEAD"],
+        app.MapMethods("questions/{id:guid}/result", ["HEAD"],
             async (Guid id, ApplicationDbContext dbContext, ClaimsPrincipal claimsPrincipal,
                 UserManager<IdentityUser> userManager, CancellationToken cancellationToken) =>
             {
@@ -23,9 +22,9 @@ public class GetRankingQuestionResultModule : ICarterModule
                     .FirstOrDefaultAsync(x => x.ExternalIdentifier == id, cancellationToken);
 
                 return rankingQuestion != null ? Results.Ok() : Results.NotFound();
-            }).AllowAnonymous();
+            }).DisableRateLimiting();
 
-        app.MapGet("api/questions/{id:guid}/result",
+        app.MapGet("questions/{id:guid}/result",
             async (Guid id, ApplicationDbContext dbContext, ClaimsPrincipal claimsPrincipal,
                 UserManager<IdentityUser> userManager, CancellationToken cancellationToken) =>
             {
@@ -78,19 +77,19 @@ public class GetRankingQuestionResultModule : ICarterModule
                         };
                     }).ToList()
                 };
-            }).RequireRateLimiting("fixed").AllowAnonymous();
+            });
     }
-}
 
-public record GetRankingQuestionResultResponse
-{
-    public IList<GetRankingQuestionResultItemResponse> Items { get; set; } = [];
-    public required int ResponseCount { get; set; }
-}
+    private record GetRankingQuestionResultResponse
+    {
+        public IList<GetRankingQuestionResultItemResponse> Items { get; set; } = [];
+        public required int ResponseCount { get; set; }
+    }
 
-public record GetRankingQuestionResultItemResponse
-{
-    public required string Title { get; set; }
-    public string? Description { get; set; }
-    public int Score { get; set; }
+    private record GetRankingQuestionResultItemResponse
+    {
+        public required string Title { get; set; }
+        public string? Description { get; set; }
+        public int Score { get; set; }
+    }
 }

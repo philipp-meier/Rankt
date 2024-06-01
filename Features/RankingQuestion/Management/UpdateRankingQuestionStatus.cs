@@ -1,18 +1,12 @@
 using System.Security.Claims;
-using Carter;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Rankt.Entities;
 using Rankt.Infrastructure.Persistence;
 
-namespace Rankt.Features.RankingQuestion;
+namespace Rankt.Features.RankingQuestion.Management;
 
-public record UpdateRankingQuestionStatusRequest
-{
-    public required string Identifier { get; set; }
-}
-
-public class UpdateRankingQuestionStatusModule : ICarterModule
+internal static class UpdateRankingQuestionStatusEndpoint
 {
     private static readonly (string current, string target)[] s_allowedStatusTransitions =
     [
@@ -23,9 +17,9 @@ public class UpdateRankingQuestionStatusModule : ICarterModule
         (RankingQuestionStatus.Completed.Identifier, RankingQuestionStatus.Archived.Identifier)
     ];
 
-    public void AddRoutes(IEndpointRouteBuilder app)
+    internal static void MapUpdateRankingQuestionStatusEndpoint(this IEndpointRouteBuilder app)
     {
-        app.MapPost("api/questions/{id:guid}/status", async (Guid id, UpdateRankingQuestionStatusRequest request,
+        app.MapPost("questions/{id:guid}/status", async (Guid id, UpdateRankingQuestionStatusRequest request,
             ApplicationDbContext dbContext,
             ClaimsPrincipal claimsPrincipal, UserManager<IdentityUser> userManager,
             CancellationToken cancellationToken) =>
@@ -74,6 +68,8 @@ public class UpdateRankingQuestionStatusModule : ICarterModule
             await dbContext.SaveChangesAsync(cancellationToken);
 
             return Results.Ok();
-        }).RequireAuthorization();
+        });
     }
+
+    private record UpdateRankingQuestionStatusRequest(string Identifier);
 }

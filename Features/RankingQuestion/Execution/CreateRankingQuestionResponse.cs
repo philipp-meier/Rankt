@@ -1,27 +1,14 @@
-using Carter;
 using Microsoft.EntityFrameworkCore;
 using Rankt.Entities;
 using Rankt.Infrastructure.Persistence;
 
-namespace Rankt.Features.RankingQuestion;
+namespace Rankt.Features.RankingQuestion.Execution;
 
-public record CreateRankingQuestionResponseRequest
+internal static class CreateRankingQuestionResponseEndpoint
 {
-    public required string Username { get; set; }
-    public IList<CreateRankingQuestionResponseItemRequest> Options { get; set; } = [];
-}
-
-public record CreateRankingQuestionResponseItemRequest
-{
-    public required int Rank { get; set; }
-    public required Guid Identifier { get; set; }
-}
-
-public class CreateRankingQuestionResponseModule : ICarterModule
-{
-    public void AddRoutes(IEndpointRouteBuilder app)
+    internal static void MapCreateRankingQuestionResponseEndpoint(this IEndpointRouteBuilder app)
     {
-        app.MapPost("api/questions/{id:guid}/response",
+        app.MapPost("questions/{id:guid}/response",
             async (Guid id, CreateRankingQuestionResponseRequest request, ApplicationDbContext dbContext,
                 CancellationToken cancellationToken) =>
             {
@@ -71,6 +58,12 @@ public class CreateRankingQuestionResponseModule : ICarterModule
                 await dbContext.SaveChangesAsync(cancellationToken);
 
                 return Results.Ok(new { identifier = response.ExternalIdentifier });
-            }).RequireRateLimiting("fixed").AllowAnonymous();
+            });
     }
+
+    private record CreateRankingQuestionResponseRequest(
+        string Username,
+        IList<CreateRankingQuestionResponseItemRequest> Options);
+
+    private record CreateRankingQuestionResponseItemRequest(Guid Identifier, int Rank);
 }

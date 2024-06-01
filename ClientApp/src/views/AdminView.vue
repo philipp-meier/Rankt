@@ -22,7 +22,7 @@ const questions: Ref<IRankingQuestion[]> = ref([]);
 const availableStatuses: Ref<{ label: string; value: string }[]> = ref([]);
 
 onBeforeMount(async () => {
-  fetch(API_ENDPOINTS.Questions, { method: 'GET' }).then(async (resp) => {
+  fetch(API_ENDPOINTS.ManagementQuestions, { method: 'GET' }).then(async (resp) => {
     if (resp.ok) {
       const jsonResponse = await resp.json();
       questions.value = jsonResponse.rankingQuestions;
@@ -98,7 +98,7 @@ const saveQuestion = () => {
 
   if (questionEditModel?.value.title?.trim()) {
     if (questionEditModel.value.identifier) {
-      fetch(`${API_ENDPOINTS.Questions}/${questionEditModel.value.identifier}`, {
+      fetch(`${API_ENDPOINTS.ManagementQuestions}/${questionEditModel.value.identifier}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(questionEditModel.value)
@@ -119,7 +119,7 @@ const saveQuestion = () => {
         // TODO: toast message?
       });
     } else {
-      fetch(API_ENDPOINTS.Questions, {
+      fetch(API_ENDPOINTS.ManagementQuestions, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(questionEditModel.value)
@@ -171,7 +171,7 @@ const confirmDeleteSelected = () => {
 };
 
 const deleteQuestion = () => {
-  fetch(`${API_ENDPOINTS.Questions}/${questionEditModel.value.identifier}`, {
+  fetch(`${API_ENDPOINTS.ManagementQuestions}/${questionEditModel.value.identifier}`, {
     method: 'DELETE'
   }).then(async (resp) => {
     if (resp.ok) {
@@ -193,7 +193,7 @@ const deleteQuestion = () => {
 const deleteSelectedQuestions = () => {
   if (selectedQuestions.value) {
     selectedQuestions.value?.forEach(async (question) => {
-      const resp = await fetch(`${API_ENDPOINTS.Questions}/${question.identifier}`, {
+      const resp = await fetch(`${API_ENDPOINTS.ManagementQuestions}/${question.identifier}`, {
         method: 'DELETE'
       });
       if (resp.ok) {
@@ -244,7 +244,7 @@ const onCellEditComplete = (event: any) => {
     return;
   }
 
-  fetch(`${API_ENDPOINTS.Questions}/${data.identifier}/status`, {
+  fetch(`${API_ENDPOINTS.ManagementQuestions}/${data.identifier}/status`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ identifier: newValue })

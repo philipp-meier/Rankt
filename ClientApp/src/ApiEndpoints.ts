@@ -1,6 +1,7 @@
 export const API_ENDPOINTS = {
-  UserInfo: '/api/user/info',
-  Login: '/api/login',
-  Logout: '/api/logout',
-  Questions: '/api/questions'
+  UserInfo: '/api/account/info',
+  Login: '/api/account/login',
+  Logout: '/api/account/logout',
+  Questions: '/api/questions',
+  ManagementQuestions: '/api/management/questions'
 };

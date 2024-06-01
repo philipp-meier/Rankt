@@ -1,16 +1,15 @@
 using System.Security.Claims;
-using Carter;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Rankt.Infrastructure.Persistence;
 
-namespace Rankt.Features.RankingQuestion;
+namespace Rankt.Features.RankingQuestion.Management;
 
-public class DeleteRankingQuestionModule : ICarterModule
+internal static class DeleteRankingQuestionEndpoint
 {
-    public void AddRoutes(IEndpointRouteBuilder app)
+    internal static void MapDeleteRankingQuestionEndpoint(this IEndpointRouteBuilder app)
     {
-        app.MapDelete("api/questions/{id:guid}", async (Guid id, ApplicationDbContext dbContext,
+        app.MapDelete("questions/{id:guid}", async (Guid id, ApplicationDbContext dbContext,
             ClaimsPrincipal claimsPrincipal, UserManager<IdentityUser> userManager,
             CancellationToken cancellationToken) =>
         {
@@ -34,6 +33,6 @@ public class DeleteRankingQuestionModule : ICarterModule
             await dbContext.SaveChangesAsync(cancellationToken);
 
             return Results.Ok();
-        }).RequireAuthorization();
+        });
     }
 }

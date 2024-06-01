@@ -1,10 +1,10 @@
 using System.Threading.RateLimiting;
-using Carter;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
-using Rankt.Extensions;
+using Rankt.Features.RankingQuestion;
+using Rankt.Features.Account;
 using Rankt.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -41,8 +41,6 @@ builder.Services.AddRateLimiter(o =>
     });
 });
 
-builder.Services.AddCarter();
-
 builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
 
@@ -75,8 +73,8 @@ app.UseForwardedHeaders();
 
 app.UseStaticFiles();
 
-app.MapUserEndpoints();
-app.MapCarter();
+app.MapAccountEndpoints();
+app.MapRankingQuestionEndpoints();
 
 app.MapFallbackToFile("index.html");
 
