@@ -17,9 +17,8 @@ public static class UserEndpointBuilderExtensions
 
         // TODO: Rate limiting
         apiGroup.MapPost("/login", async Task<Results<Ok<AccessTokenResponse>, EmptyHttpResult, ProblemHttpResult>>
-            ([FromBody] LoginRequest login, [FromServices] IServiceProvider sp) =>
+            ([FromBody] LoginRequest login, SignInManager<IdentityUser> signInManager) =>
         {
-            var signInManager = sp.GetRequiredService<SignInManager<IdentityUser>>();
             signInManager.AuthenticationScheme = IdentityConstants.ApplicationScheme;
 
             var result = await signInManager.PasswordSignInAsync(login.Username, login.Password, true,
@@ -42,19 +41,17 @@ public static class UserEndpointBuilderExtensions
             .WithOpenApi()
             .RequireAuthorization();
 
-        apiGroup.MapPost("/user/info", async (ClaimsPrincipal claimsPrincipal, [FromServices] IServiceProvider sp) =>
+        apiGroup.MapPost("/user/info", async (ClaimsPrincipal claimsPrincipal,
+            UserManager<IdentityUser> userManager) =>
         {
-            var userManager = sp.GetRequiredService<UserManager<IdentityUser>>();
             var user = await userManager.GetUserAsync(claimsPrincipal);
-
             return Results.Ok(new { isAuthenticated = user != null });
         }).AllowAnonymous();
 
         apiGroup.MapPost("/user/account", async Task<Results<Ok, ValidationProblem, NotFound>>
         (ClaimsPrincipal claimsPrincipal, [FromBody] PasswordChangeRequest request,
-            [FromServices] IServiceProvider sp) =>
+            UserManager<IdentityUser> userManager) =>
         {
-            var userManager = sp.GetRequiredService<UserManager<IdentityUser>>();
             if (await userManager.GetUserAsync(claimsPrincipal) is not { } user)
             {
                 return TypedResults.NotFound();

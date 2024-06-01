@@ -1,5 +1,4 @@
 using Carter;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -19,7 +18,12 @@ builder.Services.AddSwaggerGen();
 // TODO: Clean up and move to infrastructure/web/...
 builder.Services.AddInfrastructureServices(builder.Configuration);
 
-builder.Services.AddIdentityApiEndpoints<IdentityUser>()
+builder.Services.AddIdentityApiEndpoints<IdentityUser>(opt =>
+    {
+        opt.Lockout.AllowedForNewUsers = true;
+        opt.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+        opt.Lockout.MaxFailedAccessAttempts = 3;
+    })
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddCarter();

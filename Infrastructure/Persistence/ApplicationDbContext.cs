@@ -54,7 +54,10 @@ public class ApplicationDbContext(
             Name = "Admin", NormalizedName = "ADMIN", Id = AdminRoleId, ConcurrencyStamp = AdminRoleId
         });
 
-        var adminUser = new IdentityUser { Id = AdminUserId, UserName = "admin", NormalizedUserName = "ADMIN" };
+        var adminUser = new IdentityUser
+        {
+            Id = AdminUserId, UserName = "admin", NormalizedUserName = "ADMIN", LockoutEnabled = true
+        };
 
         var pwHasher = new PasswordHasher<IdentityUser>();
         adminUser.PasswordHash = pwHasher.HashPassword(adminUser, "admin");
