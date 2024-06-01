@@ -55,6 +55,13 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
 
 var app = builder.Build();
 
+// Handled by the reverse proxy
+app.UseHttpsRedirection();
+
+// Other security headers are appended by the reverse proxy (see OWASP recommendations).
+app.UseSecurityHeaders();
+app.UseHsts();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -62,12 +69,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
     app.UseDeveloperExceptionPage();
 }
-
-// Handled by the reverse proxy
-app.UseHttpsRedirection();
-
-// Other security headers are appended by the reverse proxy (see OWASP recommendations).
-app.UseHsts();
 
 app.UseRateLimiter();
 app.UseForwardedHeaders();
