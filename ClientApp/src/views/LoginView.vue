@@ -5,6 +5,7 @@ import Button from 'primevue/button';
 import { type Ref, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/authStore';
+import { useToast } from 'primevue/usetoast';
 
 const username: Ref<string | null> = ref(null);
 const password: Ref<string | null> = ref(null);
@@ -13,6 +14,7 @@ const loading = ref(false);
 
 const router = useRouter();
 const authStore = useAuthStore();
+const toast = useToast();
 
 const submit = () => {
   loading.value = true;
@@ -20,8 +22,12 @@ const submit = () => {
     loading.value = false;
 
     authStore.login(username.value!, password.value!).then(() => {
-      if (authStore.isAuthenticated) router.push('/admin');
-      else isInvalid.value = true;
+      if (authStore.isAuthenticated) {
+        router.push('/admin');
+      } else {
+        isInvalid.value = true;
+        toast.add({ severity: 'error', summary: 'Error', detail: 'Login failed.', life: 1000 });
+      }
     });
   }, 2000);
 };
@@ -30,28 +36,30 @@ const submit = () => {
 <template>
   <div class="card login-container">
     <h2>Login</h2>
-    <div>
-      <InputText
-        id="username"
-        v-model="username"
-        :invalid="isInvalid"
-        placeholder="Username"
-        @keyup.enter="submit"
-      />
-    </div>
-    <div>
-      <Password
-        id="password"
-        v-model="password"
-        :feedback="false"
-        :invalid="isInvalid"
-        placeholder="Password"
-        @keyup.enter="submit"
-      />
-    </div>
-    <div>
-      <Button :loading="loading" label="Submit" @click="submit" />
-    </div>
+    <form @submit.prevent="submit">
+      <div>
+        <InputText
+          id="username"
+          v-model="username"
+          :invalid="isInvalid"
+          placeholder="Username"
+          @keyup.enter="submit"
+        />
+      </div>
+      <div>
+        <Password
+          id="password"
+          v-model="password"
+          :feedback="false"
+          :invalid="isInvalid"
+          placeholder="Password"
+          @keyup.enter="submit"
+        />
+      </div>
+      <div>
+        <Button :loading="loading" label="Submit" type="submit" />
+      </div>
+    </form>
   </div>
 </template>
 
