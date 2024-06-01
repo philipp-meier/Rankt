@@ -11,6 +11,7 @@ namespace Rankt.Features.RankingQuestion;
 public record UpdateRankingQuestionRequest
 {
     public required string Title { get; set; }
+    public int? MaxSelectableItems { get; set; }
     public List<UpdateRankingQuestionOptionRequest> Options { get; set; } = [];
 }
 
@@ -90,6 +91,10 @@ public class UpdateRankingQuestion : ICarterModule
                     Title = toAdd.Title, Description = toAdd.Description
                 });
             }
+
+            rankingQuestion.MaxSelectableItems = request.MaxSelectableItems.HasValue
+                ? Math.Min(rankingQuestion.Options.Count, request.MaxSelectableItems.Value)
+                : request.MaxSelectableItems;
 
             dbContext.Update(rankingQuestion);
 

@@ -31,10 +31,7 @@ public class CreateRankingQuestionModule : ICarterModule
 
             var question = new Entities.RankingQuestion
             {
-                Title = command.Title,
-                Status = status,
-                MaxSelectableItems = command.MaxSelectableItems,
-                Options = new List<RankingQuestionOption>()
+                Title = command.Title, Status = status, Options = new List<RankingQuestionOption>()
             };
 
             foreach (var option in command.Options)
@@ -44,6 +41,10 @@ public class CreateRankingQuestionModule : ICarterModule
                     Title = option.Title, Description = option.Description
                 });
             }
+
+            question.MaxSelectableItems = command.MaxSelectableItems.HasValue
+                ? Math.Min(question.Options.Count, command.MaxSelectableItems.Value)
+                : command.MaxSelectableItems;
 
             dbContext.Add(question);
 

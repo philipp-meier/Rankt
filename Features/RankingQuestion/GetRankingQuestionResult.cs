@@ -39,8 +39,6 @@ public class GetRankingQuestionResultModule : ICarterModule
                     .ThenInclude(x => x.RankingQuestionOption)
                     .FirstAsync(x => x.ExternalIdentifier == id, cancellationToken);
 
-                // If there is a limit, only the first N items of each response are relevant
-                // TODO: Improve UI/UX for that case
                 var maxItems = rankingQuestion.MaxSelectableItems ?? rankingQuestion.Options.Count;
                 var responses = rankingQuestion.Responses.ToArray();
 

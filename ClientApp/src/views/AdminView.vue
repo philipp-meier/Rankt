@@ -5,6 +5,7 @@ import DataTable from 'primevue/datatable';
 import IconField from 'primevue/iconfield';
 import InputIcon from 'primevue/inputicon';
 import InputText from 'primevue/inputtext';
+import InputNumber from 'primevue/inputnumber';
 import Column from 'primevue/column';
 import Dialog from 'primevue/dialog';
 import Tag from 'primevue/tag';
@@ -92,6 +93,8 @@ const hideDialog = () => {
 };
 const saveQuestion = () => {
   submitted.value = true;
+
+  if (!isValidMaxSelectableItems(questionEditModel.value)) return;
 
   if (questionEditModel?.value.title?.trim()) {
     if (questionEditModel.value.identifier) {
@@ -276,6 +279,12 @@ const copyToClipboard = (identifier: string) => {
     life: 1000
   });
 };
+
+const isValidMaxSelectableItems = (question: IRankingQuestion): boolean => {
+  if (!question.options || !question.maxSelectableItems) return true;
+
+  return question.maxSelectableItems <= question.options.length;
+};
 </script>
 
 <template>
@@ -404,6 +413,19 @@ const copyToClipboard = (identifier: string) => {
         />
         <small v-if="submitted && !questionEditModel.title" class="p-error"
           >Title is required.</small
+        >
+      </div>
+
+      <div class="field">
+        <label for="maxSelectableItems">Max. Selectable Items</label>
+        <InputNumber
+          id="maxSelectableItems"
+          :min="1"
+          :invalid="submitted && !isValidMaxSelectableItems(questionEditModel)"
+          v-model.trim="questionEditModel.maxSelectableItems"
+        />
+        <small v-if="submitted && !isValidMaxSelectableItems(questionEditModel)" class="p-error"
+          >Number must not be greater than the number of available options.</small
         >
       </div>
 
