@@ -21,7 +21,6 @@ public class CreateRankingQuestionResponseModule : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        // TODO: Rate-limiting?
         app.MapPost("api/questions/{id:guid}/response",
             async (Guid id, CreateRankingQuestionResponseRequest request, ApplicationDbContext dbContext,
                 CancellationToken cancellationToken) =>
@@ -72,6 +71,6 @@ public class CreateRankingQuestionResponseModule : ICarterModule
                 await dbContext.SaveChangesAsync(cancellationToken);
 
                 return Results.Ok(new { identifier = response.ExternalIdentifier });
-            }).AllowAnonymous();
+            }).RequireRateLimiting("fixed").AllowAnonymous();
     }
 }

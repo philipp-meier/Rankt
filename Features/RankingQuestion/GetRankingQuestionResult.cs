@@ -11,7 +11,6 @@ public class GetRankingQuestionResultModule : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        // TODO: Rate Limiting
         app.MapMethods("api/questions/{id:guid}/result", ["HEAD"],
             async (Guid id, ApplicationDbContext dbContext, ClaimsPrincipal claimsPrincipal,
                 UserManager<IdentityUser> userManager, CancellationToken cancellationToken) =>
@@ -81,7 +80,7 @@ public class GetRankingQuestionResultModule : ICarterModule
                         };
                     }).ToList()
                 };
-            }).AllowAnonymous();
+            }).RequireRateLimiting("fixed").AllowAnonymous();
     }
 }
 

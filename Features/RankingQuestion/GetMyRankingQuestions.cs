@@ -10,7 +10,6 @@ public class GetMyRankingQuestionModule : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        // TODO: Rate Limiting
         app.MapGet("api/questions", async (ApplicationDbContext dbContext, ClaimsPrincipal claimsPrincipal,
             UserManager<IdentityUser> userManager, CancellationToken cancellationToken) =>
         {

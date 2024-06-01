@@ -1,6 +1,8 @@
+using System.Threading.RateLimiting;
 using Carter;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Rankt.Extensions;
 using Rankt.Infrastructure.Persistence;
@@ -25,6 +27,19 @@ builder.Services.AddIdentityApiEndpoints<IdentityUser>(opt =>
         opt.Lockout.MaxFailedAccessAttempts = 3;
     })
     .AddEntityFrameworkStores<ApplicationDbContext>();
+
+// Rate limiting for APIs that do not require authentication (e.g., "login")
+builder.Services.AddRateLimiter(o =>
+{
+    o.AddFixedWindowLimiter("fixed", options =>
+    {
+        // A maximum of 4 requests per each 12-second window are allowed
+        options.PermitLimit = 4;
+        options.Window = TimeSpan.FromSeconds(12);
+        options.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        options.QueueLimit = 2;
+    });
+});
 
 builder.Services.AddCarter();
 
@@ -54,6 +69,7 @@ app.UseHttpsRedirection();
 // Other security headers are appended by the reverse proxy (see OWASP recommendations).
 app.UseHsts();
 
+app.UseRateLimiter();
 app.UseForwardedHeaders();
 
 app.UseStaticFiles();

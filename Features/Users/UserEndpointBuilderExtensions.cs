@@ -15,7 +15,6 @@ public static class UserEndpointBuilderExtensions
         var apiGroup = endpoints.MapGroup("api")
             .DisableAntiforgery(); // TODO
 
-        // TODO: Rate limiting
         apiGroup.MapPost("/login", async Task<Results<Ok<AccessTokenResponse>, EmptyHttpResult, ProblemHttpResult>>
             ([FromBody] LoginRequest login, SignInManager<IdentityUser> signInManager) =>
         {
@@ -31,7 +30,7 @@ public static class UserEndpointBuilderExtensions
 
             // The signInManager already produced the needed response in the form of a cookie or bearer token.
             return TypedResults.Empty;
-        }).AllowAnonymous();
+        }).RequireRateLimiting("fixed").AllowAnonymous();
 
         apiGroup.MapPost("/logout", async (SignInManager<IdentityUser> signInManager) =>
             {

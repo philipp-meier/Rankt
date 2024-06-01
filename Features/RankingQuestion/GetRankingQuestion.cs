@@ -11,7 +11,6 @@ public class GetRankingQuestionModule : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        // TODO: Rate Limiting
         app.MapMethods("api/questions/{id:guid}", ["HEAD"], async (Guid id,
             ApplicationDbContext dbContext, ClaimsPrincipal claimsPrincipal, UserManager<IdentityUser> userManager,
             CancellationToken cancellationToken) =>
@@ -24,7 +23,7 @@ public class GetRankingQuestionModule : ICarterModule
                 .FirstOrDefaultAsync(x => x.ExternalIdentifier == id, cancellationToken);
 
             return rankingQuestion != null ? Results.Ok() : Results.NotFound();
-        }).AllowAnonymous();
+        }).RequireRateLimiting("fixed").AllowAnonymous();
 
         app.MapGet("api/questions/{id:guid}", async (Guid id, ApplicationDbContext dbContext,
             ClaimsPrincipal claimsPrincipal, UserManager<IdentityUser> userManager,
@@ -48,7 +47,7 @@ public class GetRankingQuestionModule : ICarterModule
                     Identifier = x.ExternalIdentifier, Title = x.Title, Description = x.Description
                 }).ToList()
             };
-        }).AllowAnonymous();
+        }).RequireRateLimiting("fixed").AllowAnonymous();
     }
 }
 
