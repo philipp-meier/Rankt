@@ -25,7 +25,8 @@ public static class UserEndpointBuilderExtensions
 
             if (!result.Succeeded)
             {
-                return TypedResults.Problem(result.ToString(), statusCode: StatusCodes.Status401Unauthorized);
+                // Generic error message without hinting whether the credentials were wrong or the user exists/is locked.
+                return TypedResults.Problem("Login failed.", statusCode: StatusCodes.Status401Unauthorized);
             }
 
             // The signInManager already produced the needed response in the form of a cookie or bearer token.
