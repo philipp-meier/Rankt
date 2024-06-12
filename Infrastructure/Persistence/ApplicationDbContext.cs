@@ -12,7 +12,7 @@ public class ApplicationDbContext(
     AuditableEntitySaveChangesInterceptor auditableEntitySaveChangesInterceptor)
     : IdentityDbContext<IdentityUser>(options)
 {
-    internal string AdminUserId = "118d6207-3d51-4ad0-b059-ffab450e4458";
+    internal const string AdminUserId = "118d6207-3d51-4ad0-b059-ffab450e4458";
 
     public DbSet<RankingQuestion> RankingQuestions => Set<RankingQuestion>();
     public DbSet<RankingQuestionOption> RankingQuestionOptions => Set<RankingQuestionOption>();

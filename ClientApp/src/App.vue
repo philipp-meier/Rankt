@@ -58,18 +58,25 @@ const menuItems = computed(() => {
     <div class="footer-container">
       <div class="github">
         <i class="pi pi-github" />
-        <span>{{ config.AppTitle }}</span>
+        <a href="https://github.com/philipp-meier/Rankt" target="_blank">{{ config.AppTitle }}</a>
       </div>
     </div>
   </footer>
 </template>
 
 <style scoped>
+main {
+  height: calc(100vh - 45px - 40px);
+  overflow: auto;
+}
+
 footer {
-  width: 100%;
-  bottom: 0;
   position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
   background: white;
+  height: 40px;
 
   div.footer-container {
     margin: 0.5em;

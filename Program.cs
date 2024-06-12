@@ -87,7 +87,7 @@ using (var scope = app.Services.CreateScope())
     var adminUsername = builder.Configuration["AppSetup:AdminUsername"] ?? "admin";
     var adminPassword = builder.Configuration["AppSetup:AdminPassword"] ?? "temp";
 
-    var adminUser = dbContext.Users.First(x => x.Id == dbContext.AdminUserId);
+    var adminUser = dbContext.Users.First(x => x.Id == ApplicationDbContext.AdminUserId);
     adminUser.UserName = adminUsername;
 
     var pwHasher = new PasswordHasher<IdentityUser>();
