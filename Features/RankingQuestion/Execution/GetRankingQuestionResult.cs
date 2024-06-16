@@ -22,7 +22,7 @@ internal static class GetRankingQuestionResultEndpoint
                     .FirstOrDefaultAsync(x => x.ExternalIdentifier == id, cancellationToken);
 
                 return rankingQuestion != null ? Results.Ok() : Results.NotFound();
-            }).DisableRateLimiting();
+            });
 
         app.MapGet("questions/{id:guid}/result",
             async (Guid id, ApplicationDbContext dbContext, ClaimsPrincipal claimsPrincipal,
