@@ -4,22 +4,22 @@ using Microsoft.EntityFrameworkCore;
 using Rankt.Entities;
 using Rankt.Infrastructure.Persistence;
 
-namespace Rankt.Features.RankingQuestion.Management;
+namespace Rankt.Features.Question.Management;
 
-internal static class UpdateRankingQuestionStatusEndpoint
+internal static class UpdateQuestionStatusEndpoint
 {
     private static readonly (string current, string target)[] s_allowedStatusTransitions =
     [
-        (RankingQuestionStatus.New.Identifier, RankingQuestionStatus.Published.Identifier),
-        (RankingQuestionStatus.Published.Identifier, RankingQuestionStatus.InProgress.Identifier),
-        (RankingQuestionStatus.Published.Identifier, RankingQuestionStatus.Completed.Identifier),
-        (RankingQuestionStatus.InProgress.Identifier, RankingQuestionStatus.Completed.Identifier),
-        (RankingQuestionStatus.Completed.Identifier, RankingQuestionStatus.Archived.Identifier)
+        (QuestionStatus.New.Identifier, QuestionStatus.Published.Identifier),
+        (QuestionStatus.Published.Identifier, QuestionStatus.InProgress.Identifier),
+        (QuestionStatus.Published.Identifier, QuestionStatus.Completed.Identifier),
+        (QuestionStatus.InProgress.Identifier, QuestionStatus.Completed.Identifier),
+        (QuestionStatus.Completed.Identifier, QuestionStatus.Archived.Identifier)
     ];
 
-    internal static void MapUpdateRankingQuestionStatusEndpoint(this IEndpointRouteBuilder app)
+    internal static void MapUpdateQuestionStatusEndpoint(this IEndpointRouteBuilder app)
     {
-        app.MapPost("questions/{id:guid}/status", async (Guid id, UpdateRankingQuestionStatusRequest request,
+        app.MapPost("questions/{id:guid}/status", async (Guid id, UpdateQuestionStatusRequest request,
             ApplicationDbContext dbContext,
             ClaimsPrincipal claimsPrincipal, UserManager<IdentityUser> userManager,
             CancellationToken cancellationToken) =>
@@ -30,18 +30,18 @@ internal static class UpdateRankingQuestionStatusEndpoint
                 throw new UnauthorizedAccessException();
             }
 
-            var rankingQuestion = await dbContext.RankingQuestions
+            var question = await dbContext.Questions
                 .Where(x => x.CreatedBy == user)
                 .Include(x => x.Status)
                 .FirstOrDefaultAsync(x => x.ExternalIdentifier == id, cancellationToken);
 
-            if (rankingQuestion == null)
+            if (question == null)
             {
                 return Results.NotFound();
             }
 
             var newStatus =
-                await dbContext.RankingQuestionStatus.FirstOrDefaultAsync(x => x.Identifier == request.Identifier,
+                await dbContext.QuestionStatus.FirstOrDefaultAsync(x => x.Identifier == request.Identifier,
                     cancellationToken);
 
             if (newStatus == null)
@@ -49,7 +49,7 @@ internal static class UpdateRankingQuestionStatusEndpoint
                 return Results.BadRequest(new { error = $"Invalid status identifier \"{request.Identifier}\"." });
             }
 
-            var currentStatus = rankingQuestion.Status;
+            var currentStatus = question.Status;
 
             // TODO: Improve "StateMachine"
             if (!s_allowedStatusTransitions.Any(x =>
@@ -61,9 +61,9 @@ internal static class UpdateRankingQuestionStatusEndpoint
                 });
             }
 
-            rankingQuestion.Status = newStatus;
+            question.Status = newStatus;
 
-            dbContext.Update(rankingQuestion);
+            dbContext.Update(question);
 
             await dbContext.SaveChangesAsync(cancellationToken);
 
@@ -71,5 +71,5 @@ internal static class UpdateRankingQuestionStatusEndpoint
         });
     }
 
-    private record UpdateRankingQuestionStatusRequest(string Identifier);
+    private record UpdateQuestionStatusRequest(string Identifier);
 }

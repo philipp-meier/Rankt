@@ -14,11 +14,12 @@ public class ApplicationDbContext(
 {
     internal const string AdminUserId = "118d6207-3d51-4ad0-b059-ffab450e4458";
 
-    public DbSet<RankingQuestion> RankingQuestions => Set<RankingQuestion>();
-    public DbSet<RankingQuestionOption> RankingQuestionOptions => Set<RankingQuestionOption>();
-    public DbSet<RankingQuestionResponse> RankingQuestionResponses => Set<RankingQuestionResponse>();
-    public DbSet<RankingQuestionResponseItem> RankingQuestionResponseItems => Set<RankingQuestionResponseItem>();
-    public DbSet<RankingQuestionStatus> RankingQuestionStatus => Set<RankingQuestionStatus>();
+    public DbSet<Question> Questions => Set<Question>();
+    public DbSet<QuestionOption> QuestionOptions => Set<QuestionOption>();
+    public DbSet<QuestionResponse> QuestionResponses => Set<QuestionResponse>();
+    public DbSet<QuestionResponseItem> QuestionResponseItems => Set<QuestionResponseItem>();
+    public DbSet<QuestionStatus> QuestionStatus => Set<QuestionStatus>();
+    public DbSet<QuestionType> QuestionType => Set<QuestionType>();
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -32,19 +33,24 @@ public class ApplicationDbContext(
 
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
-        builder.Entity<RankingQuestionStatus>().HasData(
-            Entities.RankingQuestionStatus.New,
-            Entities.RankingQuestionStatus.Published,
-            Entities.RankingQuestionStatus.InProgress,
-            Entities.RankingQuestionStatus.Completed,
-            Entities.RankingQuestionStatus.Archived
+        builder.Entity<QuestionStatus>().HasData(
+            Entities.QuestionStatus.New,
+            Entities.QuestionStatus.Published,
+            Entities.QuestionStatus.InProgress,
+            Entities.QuestionStatus.Completed,
+            Entities.QuestionStatus.Archived
         );
 
-        builder.Entity<RankingQuestion>()
+        builder.Entity<QuestionType>().HasData(
+            Entities.QuestionType.RankingQuestion,
+            Entities.QuestionType.Voting
+        );
+
+        builder.Entity<Question>()
             .HasIndex(x => x.ExternalIdentifier)
             .IsUnique();
 
-        builder.Entity<RankingQuestionOption>()
+        builder.Entity<QuestionOption>()
             .HasIndex(x => x.ExternalIdentifier)
             .IsUnique();
 

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Rankt.Infrastructure.Persistence;
 
@@ -10,9 +11,11 @@ using Rankt.Infrastructure.Persistence;
 namespace Rankt.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240720202838_QuestionRankOptional")]
+    partial class QuestionRankOptional
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.5");
@@ -143,13 +146,13 @@ namespace Rankt.Infrastructure.Migrations
                         {
                             Id = "118d6207-3d51-4ad0-b059-ffab450e4458",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "ee27544b-c91d-4b2f-bdd5-310b9ca91ba0",
+                            ConcurrencyStamp = "4ddffd30-e74b-40d9-9ce5-f4d98aced37b",
                             EmailConfirmed = false,
                             LockoutEnabled = true,
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAELMioCcZz055Tewxdx3gKrOvguAJ7ompqNYbhDi+DimyBhNDo8IzBffvP871CrpDsw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEDtW/8CN0XDuF2cm46ZpPnRdoO2QQbg2q9pnHEIbvIikqlHe6VPWBQM2e4oX9DEavw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "cce18b28-4b0c-44b2-97ba-a2fc0da15f75",
+                            SecurityStamp = "6feacc6b-6dd7-415e-8d8f-492fa63c9af6",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         });
@@ -379,6 +382,7 @@ namespace Rankt.Infrastructure.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<int?>("Rank")
+                        .IsRequired()
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");

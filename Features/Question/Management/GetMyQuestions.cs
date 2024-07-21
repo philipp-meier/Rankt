@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Rankt.Infrastructure.Persistence;
 
-namespace Rankt.Features.RankingQuestion.Management;
+namespace Rankt.Features.Question.Management;
 
-internal static class GetMyRankingQuestionEndpoint
+internal static class GetMyQuestionEndpoint
 {
-    internal static void MapGetMyRankingQuestionEndpoint(this IEndpointRouteBuilder app)
+    internal static void MapGetMyQuestionEndpoint(this IEndpointRouteBuilder app)
     {
         app.MapGet("questions", async (ApplicationDbContext dbContext, ClaimsPrincipal claimsPrincipal,
             UserManager<IdentityUser> userManager, CancellationToken cancellationToken) =>
@@ -18,45 +18,48 @@ internal static class GetMyRankingQuestionEndpoint
                 throw new UnauthorizedAccessException();
             }
 
-            var rankingQuestions = await dbContext.RankingQuestions
+            var questions = await dbContext.Questions
                 .Where(x => x.CreatedBy == user)
                 .Include(x => x.Status)
                 .Include(x => x.Responses)
+                .Include(question => question.Type)
                 .OrderBy(x => x.Title)
                 .ToListAsync(cancellationToken);
 
-            return new GetMyRankingQuestionResponse
+            return new GetMyQuestionResponse
             {
-                RankingQuestions = rankingQuestions.Select(x => new RankingQuestionSummary
+                Questions = questions.Select(x => new QuestionSummary
                 {
                     Identifier = x.ExternalIdentifier,
                     Title = x.Title,
                     Created = x.Created,
                     Status = x.Status.Name,
+                    Type = x.Type.Identifier,
                     ResponseCount = x.Responses.Count
                 }).ToList(),
-                AvailableStatusOptions = dbContext.RankingQuestionStatus.Select(x =>
-                    new RankingQuestionStatusOption { Identifier = x.Identifier, Name = x.Name }).ToList()
+                AvailableStatusOptions = dbContext.QuestionStatus.Select(x =>
+                    new QuestionStatusOption { Identifier = x.Identifier, Name = x.Name }).ToList()
             };
         });
     }
 
-    private record GetMyRankingQuestionResponse
+    private record GetMyQuestionResponse
     {
-        public required IList<RankingQuestionSummary> RankingQuestions { get; set; }
-        public required IList<RankingQuestionStatusOption> AvailableStatusOptions { get; set; }
+        public required IList<QuestionSummary> Questions { get; set; }
+        public required IList<QuestionStatusOption> AvailableStatusOptions { get; set; }
     }
 
-    private record RankingQuestionSummary
+    private record QuestionSummary
     {
         public Guid Identifier { get; set; }
         public required string Title { get; set; }
         public required string Status { get; set; }
+        public required string Type { get; set; }
         public int ResponseCount { get; set; }
         public DateTime Created { get; set; }
     }
 
-    private record RankingQuestionStatusOption
+    private record QuestionStatusOption
     {
         public required string Identifier { get; set; }
         public required string Name { get; set; }

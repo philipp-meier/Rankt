@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
-using Rankt.Features.RankingQuestion;
+using Rankt.Features.Question;
 using Rankt.Features.Account;
 using Rankt.Infrastructure.Persistence;
 
@@ -33,11 +33,11 @@ builder.Services.AddRateLimiter(o =>
 {
     o.AddFixedWindowLimiter("fixed", options =>
     {
-        // A maximum of 4 requests per each 12-second window are allowed
-        options.PermitLimit = 4;
-        options.Window = TimeSpan.FromSeconds(12);
+        // A maximum of 10 requests per each 10-second window are allowed
+        options.PermitLimit = 10;
+        options.Window = TimeSpan.FromSeconds(10);
         options.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
-        options.QueueLimit = 2;
+        options.QueueLimit = 10;
     });
 });
 
@@ -74,7 +74,7 @@ app.UseForwardedHeaders();
 app.UseStaticFiles();
 
 app.MapAccountEndpoints();
-app.MapRankingQuestionEndpoints();
+app.MapQuestionEndpoints();
 
 app.MapFallbackToFile("index.html");
 

@@ -3,14 +3,14 @@ import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';
-import type { IRankingQuestionOption } from '@/entities/RankingQuestionOption';
+import type { IQuestionOption } from '@/entities/QuestionOption';
 import { type Ref, ref } from 'vue';
 
 const props = defineProps<{
-  items?: IRankingQuestionOption[];
+  items?: IQuestionOption[];
 }>();
 
-const options: Ref<IRankingQuestionOption[]> = ref(props.items || []);
+const options: Ref<IQuestionOption[]> = ref(props.items || []);
 
 const addOption = () => {
   options.value.push({
@@ -25,7 +25,7 @@ const onCellEditComplete = (event: any) => {
   else event.preventDefault();
 };
 
-const deleteOption = (item: IRankingQuestionOption) => {
+const deleteOption = (item: IQuestionOption) => {
   const index = options.value.indexOf(item);
   if (index >= 0) options.value.splice(index, 1);
 };

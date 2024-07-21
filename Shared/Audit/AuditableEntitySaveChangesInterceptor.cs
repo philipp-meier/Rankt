@@ -51,7 +51,7 @@ public class AuditableEntitySaveChangesInterceptor(
 
     private static bool IsAutomaticStatusChange(EntityEntry<BaseAuditableEntity> entry)
     {
-        if (entry.State == EntityState.Added || entry.Entity is not RankingQuestion)
+        if (entry.State == EntityState.Added || entry.Entity is not Question)
         {
             return false;
         }
@@ -60,9 +60,9 @@ public class AuditableEntitySaveChangesInterceptor(
         var isAutomaticStatusChange = entry.Properties.All(x => !x.IsModified ||
                                                                 (x.Metadata.Name == "StatusId" &&
                                                                  (int)x.OriginalValue! ==
-                                                                 RankingQuestionStatus.Published.Id &&
+                                                                 QuestionStatus.Published.Id &&
                                                                  (int)x.CurrentValue! ==
-                                                                 RankingQuestionStatus.InProgress.Id));
+                                                                 QuestionStatus.InProgress.Id));
 
         return isAutomaticStatusChange;
     }

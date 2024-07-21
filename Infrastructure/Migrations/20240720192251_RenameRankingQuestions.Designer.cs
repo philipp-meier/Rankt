@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Rankt.Infrastructure.Persistence;
 
@@ -10,9 +11,11 @@ using Rankt.Infrastructure.Persistence;
 namespace Rankt.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240720192251_RenameRankingQuestions")]
+    partial class RenameRankingQuestions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.5");
@@ -143,13 +146,13 @@ namespace Rankt.Infrastructure.Migrations
                         {
                             Id = "118d6207-3d51-4ad0-b059-ffab450e4458",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "ee27544b-c91d-4b2f-bdd5-310b9ca91ba0",
+                            ConcurrencyStamp = "b562bf95-ac55-488a-85d2-45685c915c09",
                             EmailConfirmed = false,
                             LockoutEnabled = true,
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAELMioCcZz055Tewxdx3gKrOvguAJ7ompqNYbhDi+DimyBhNDo8IzBffvP871CrpDsw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEOpzhgg+/5b4PI8LA08iK24AchTFYciXG1+ObItsxumpKPM52n8wBYd+x0cLXN65lA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "cce18b28-4b0c-44b2-97ba-a2fc0da15f75",
+                            SecurityStamp = "dcd233f2-9cfd-4a9a-be64-910d12a3e313",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         });
@@ -273,9 +276,6 @@ namespace Rankt.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("TypeId")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedById");
@@ -286,8 +286,6 @@ namespace Rankt.Infrastructure.Migrations
                     b.HasIndex("LastModifiedById");
 
                     b.HasIndex("StatusId");
-
-                    b.HasIndex("TypeId");
 
                     b.ToTable("Questions");
                 });
@@ -378,7 +376,7 @@ namespace Rankt.Infrastructure.Migrations
                     b.Property<int>("QuestionResponseId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("Rank")
+                    b.Property<int>("Rank")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -438,39 +436,6 @@ namespace Rankt.Infrastructure.Migrations
                             Id = 5,
                             Identifier = "ARCHIVED",
                             Name = "archived"
-                        });
-                });
-
-            modelBuilder.Entity("Rankt.Entities.QuestionType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Identifier")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("QuestionType");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Identifier = "RQ",
-                            Name = "Ranking Question"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Identifier = "V",
-                            Name = "Voting"
                         });
                 });
 
@@ -541,19 +506,11 @@ namespace Rankt.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Rankt.Entities.QuestionType", "Type")
-                        .WithMany()
-                        .HasForeignKey("TypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("CreatedBy");
 
                     b.Navigation("LastModifiedBy");
 
                     b.Navigation("Status");
-
-                    b.Navigation("Type");
                 });
 
             modelBuilder.Entity("Rankt.Entities.QuestionOption", b =>
