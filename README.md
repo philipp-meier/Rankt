@@ -4,14 +4,15 @@
 [![CodeScene Code Health](https://codescene.io/projects/54502/status-badges/code-health)](https://codescene.io/)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://github.com/philipp-meier/Rankt/blob/main/LICENSE)
 
-Simple application for creating and executing ranking surveys.  
+Simple application for creating and executing ranking surveys.
 
 ## Status
 
 This application started as a learning project for me to get familiar with some new [Vue 3](https://vuejs.org/)
 features, [PrimeVue](https://primevue.org/), ASP.NET Identity and some other features I wanted to try out.
 
-There are still many features that are missing (see [Feature wishlist](#feature-wishlist) / [Documentation](#documentation)) or need to be refactored / cleaned up.
+There are still many features that are missing (
+see [Feature wishlist](#feature-wishlist) / [Documentation](#documentation)) or need to be refactored / cleaned up.
 
 If you want to contribute, feel free to create a pull request or an issue to talk about the change you want to make to
 ensure that you do not waste your time when implementing it.
@@ -32,11 +33,11 @@ or https://localhost:7151/swagger, if you are interested in the OpenAPI document
 
 ### Ranking Question
 
-<kbd><img src="./Data/Images/RankingQuestion.png" alt="Ranking Question"></kbd>
+<kbd><img src="./Data/Images/Question.png" alt="Ranking Question"></kbd>
 
 ### Result
 
-<kbd><img src="./Data/Images/RankingQuestionResult.png" alt="Ranking Question Result"></kbd>
+<kbd><img src="./Data/Images/QuestionResult.png" alt="Ranking Question Result"></kbd>
 
 ## Documentation
 
@@ -138,7 +139,10 @@ Furthermore, he should also be able to change his password and log out.
 - Being able to export the result and (maybe) get it into a Markdown wiki.
 - Option to dismiss a survey option entirely (e.g., if it is not important = 0 points)
 - "Confidential type": Define whether users should be able to see which user has voted which option.
-- E2E tests similar to [Chrono's E2E tests](https://github.com/philipp-meier/Chrono/blob/main/src/Chrono.Tests/E2E/00_E2ETestBase.cs).
+- E2E tests similar
+  to [Chrono's E2E tests](https://github.com/philipp-meier/Chrono/blob/main/src/Chrono.Tests/E2E/00_E2ETestBase.cs).
 - Remove the `TODO`s.
-- Improve the [RankingQuestionOptionEditList](https://github.com/philipp-meier/Rankt/blob/main/ClientApp/src/components/RankingQuestionOptionEditList.vue) and make it more user-friendly and responsive.
+- Improve
+  the [QuestionOptionEditList](https://github.com/philipp-meier/Rankt/blob/main/ClientApp/src/components/QuestionOptionEditList.vue)
+  and make it more user-friendly and responsive.
 

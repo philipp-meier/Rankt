@@ -3,33 +3,30 @@ import { useRoute, useRouter } from 'vue-router';
 import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
 import { computed, onBeforeMount, type Ref, ref } from 'vue';
-import type { IRankingQuestion } from '@/entities/RankingQuestion';
-import RankingQuestionOptionResponseControl from '@/components/RankingQuestionOptionResponseControl.vue';
+import type { IQuestion } from '@/entities/Question';
 import { QuestionService } from '@/services/QuestionService';
 import { API_ENDPOINTS } from '@/ApiEndpoints';
 import TextService from '../services/TextService';
-import Chart from 'primevue/chart';
-import InlineMessage from 'primevue/inlinemessage';
+import RankingQuestionControl from '@/components/RankingQuestionControl.vue';
+import VotingQuestionControl from '@/components/VotingQuestionControl.vue';
 
 const route = useRoute();
 const router = useRouter();
 
 const surveyIdentifier = route.query.id?.toString() || '-1';
 
-const question: Ref<IRankingQuestion | null> = ref(null);
-const result: Ref<any | null> = ref(null);
-const waitingForResults = ref(false);
+const question: Ref<IQuestion | null> = ref(null);
+const resultsAvailable = ref(false);
 
 onBeforeMount(async () => {
-  if (await checkIfResultsAvailable()) {
-    waitingForResults.value = false;
-    result.value = await getResult();
-  }
-
   if (await checkIfQuestionAvailable()) {
     const resp = await fetch(`${API_ENDPOINTS.Questions}/${surveyIdentifier}`);
     if (resp.ok) {
       question.value = await resp.json();
+    }
+
+    if (await checkIfResultsAvailable()) {
+      resultsAvailable.value = true;
     }
   } else {
     // Survey could not be found. Redirect to the start page.
@@ -42,12 +39,13 @@ const username: Ref<string | null> = ref(route.query.username?.toString() ?? nul
 const usernameAvailable = ref(!!username.value);
 const isInvalidUsername = ref(false);
 
-const loading = ref(false);
 const showQuestion = computed(
   () =>
     question.value &&
-    usernameAvailable.value &&
-    (!!username.value || QuestionService.hasVoted(question.value.identifier!, username.value!))
+    (usernameAvailable.value ||
+      (usernameAvailable.value &&
+        QuestionService.hasVoted(question.value.identifier!, username.value!)) ||
+      resultsAvailable.value)
 );
 
 const continueToQuestion = () => {
@@ -56,27 +54,8 @@ const continueToQuestion = () => {
     return;
   }
 
-  // If the user has already voted, we can directly execute the onVoted event and wait for the result.
-  if (QuestionService.hasVoted(question.value!.identifier!, username.value)) {
-    onVoted();
-  }
-
   usernameAvailable.value = true;
   isInvalidUsername.value = false;
-  loading.value = false;
-};
-
-const onVoted = () => {
-  QuestionService.setVoted(question.value!.identifier!, username!.value!);
-  waitingForResults.value = true;
-
-  const intervalId = setInterval(async () => {
-    if (await checkIfResultsAvailable()) {
-      clearInterval(intervalId);
-      result.value = await getResult();
-      waitingForResults.value = false;
-    }
-  }, 5000);
 };
 
 const checkIfQuestionAvailable = async (): Promise<boolean> => {
@@ -89,81 +68,41 @@ const checkIfResultsAvailable = async (): Promise<boolean> => {
   });
   return resp.ok;
 };
-const getResult = async (): Promise<any> => {
-  const resp = await fetch(`${API_ENDPOINTS.Questions}/${surveyIdentifier!}/result`, {
-    method: 'GET'
-  });
-  return await resp.json();
-};
-
-const resultChartData = computed(() => {
-  return {
-    labels: result.value!.items.map((x: any) => x.title),
-    datasets: [
-      {
-        label: 'Result',
-        data: result.value!.items.map((x: any) => x.score)
-      }
-    ]
-  };
-});
-
-const resultChartOptions = {
-  indexAxis: 'y',
-  plugins: {
-    legend: {
-      display: false
-    }
-  }
-};
 </script>
 
 <template>
   <div class="question-container">
-    <h2>{{ question?.title }}</h2>
-    <h4>{{ TextService.formatDateFromString(question?.created) }}</h4>
-    <br />
+    <p v-if="question == null">Loading question...</p>
+    <template v-else>
+      <h2>{{ question?.title }}</h2>
+      <h4>{{ TextService.formatDateFromString(question?.created) }}</h4>
+      <br />
 
-    <div
-      v-if="result === null && !waitingForResults && !showQuestion && question"
-      class="username-container"
-    >
-      <div>
-        <InputText
-          id="username"
-          v-model="username"
-          :invalid="isInvalidUsername"
-          autofocus
-          placeholder="Username"
-          @keyup.enter="continueToQuestion"
-        />
-        <Button :loading="loading" label="Continue" @click="continueToQuestion" />
+      <div v-if="!showQuestion" class="username-container">
+        <div>
+          <InputText
+            id="username"
+            v-model="username"
+            :invalid="isInvalidUsername"
+            autofocus
+            placeholder="Username"
+            @keyup.enter="continueToQuestion"
+          />
+          <Button label="Continue" @click="continueToQuestion" />
+        </div>
       </div>
-    </div>
 
-    <RankingQuestionOptionResponseControl
-      v-if="result === null && !waitingForResults && showQuestion && question"
-      :question="question"
-      :username="username!"
-      @voted="onVoted"
-    />
-
-    <div v-if="result === null && waitingForResults">
-      <p>Thank you for voting! As soon as the result is available, this page will be refreshed.</p>
-      <br />
-      <InlineMessage severity="info"
-        >Waiting for the initiator to complete the survey...
-      </InlineMessage>
-    </div>
-
-    <div v-if="result !== null">
-      <p>This survey was closed by the initiator.</p>
-      <p>The following result is based on {{ result.responseCount }} responses.</p>
-
-      <br />
-      <h3>Result</h3>
-      <Chart :data="resultChartData" :options="resultChartOptions" type="bar" />
-    </div>
+      <RankingQuestionControl
+        v-if="showQuestion && question.type == 'RQ'"
+        :question="question!"
+        :username="username!"
+      />
+      <VotingQuestionControl
+        v-if="showQuestion && question.type == 'V'"
+        :question="question!"
+        :username="username!"
+      />
+    </template>
   </div>
 </template>
 

@@ -2,13 +2,13 @@
 import Button from 'primevue/button';
 import OrderList from 'primevue/orderlist';
 import { useToast } from 'primevue/usetoast';
-import type { IRankingQuestionOption } from '@/entities/RankingQuestionOption';
+import type { IQuestionOption } from '@/entities/QuestionOption';
 import { type Ref, ref } from 'vue';
-import type { IRankingQuestion } from '@/entities/RankingQuestion';
+import type { IQuestion } from '@/entities/Question';
 import { API_ENDPOINTS } from '@/ApiEndpoints';
 
 const props = defineProps<{
-  question: IRankingQuestion;
+  question: IQuestion;
   username: string;
 }>();
 
@@ -17,7 +17,7 @@ const emit = defineEmits(['voted']);
 const toast = useToast();
 
 const maxItemsToVote = props.question.maxSelectableItems ?? props.question.options!.length;
-const options: Ref<IRankingQuestionOption[]> = ref([...props.question.options!]);
+const options: Ref<IQuestionOption[]> = ref([...props.question.options!]);
 const loading = ref(false);
 
 const submit = () => {
@@ -49,14 +49,14 @@ const submit = () => {
   });
 };
 
-const getPoints = (item: IRankingQuestionOption) => {
+const getPoints = (item: IQuestionOption) => {
   const position = options.value.indexOf(item);
   if (position + 1 > maxItemsToVote) return 0;
 
   return maxItemsToVote - position;
 };
 
-const getBadgeText = (item: IRankingQuestionOption) => {
+const getBadgeText = (item: IQuestionOption) => {
   const points = getPoints(item);
   return points !== 1 ? `${points} points` : `${points} point`;
 };

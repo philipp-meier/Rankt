@@ -5,13 +5,13 @@ using Microsoft.EntityFrameworkCore;
 using Rankt.Entities;
 using Rankt.Infrastructure.Persistence;
 
-namespace Rankt.Features.RankingQuestion.Management;
+namespace Rankt.Features.Question.Management;
 
-internal static class UpdateRankingQuestionEndpoint
+internal static class UpdateQuestionEndpoint
 {
-    internal static void MapUpdateRankingQuestionEndpoint(this IEndpointRouteBuilder app)
+    internal static void MapUpdateQuestionEndpoint(this IEndpointRouteBuilder app)
     {
-        app.MapPost("questions/{id:guid}", async (Guid id, UpdateRankingQuestionRequest request,
+        app.MapPost("questions/{id:guid}", async (Guid id, UpdateQuestionRequest request,
             ApplicationDbContext dbContext,
             ClaimsPrincipal claimsPrincipal, CancellationToken cancellationToken, [FromServices] IServiceProvider sp) =>
         {
@@ -22,17 +22,17 @@ internal static class UpdateRankingQuestionEndpoint
                 throw new UnauthorizedAccessException();
             }
 
-            var rankingQuestion = await dbContext.RankingQuestions
+            var question = await dbContext.Questions
                 .Where(x => x.CreatedBy == user)
                 .Include(x => x.Status)
                 .FirstOrDefaultAsync(x => x.ExternalIdentifier == id, cancellationToken);
 
-            if (rankingQuestion == null)
+            if (question == null)
             {
                 return Results.NotFound();
             }
 
-            if (rankingQuestion.Status.Id != RankingQuestionStatus.New.Id)
+            if (question.Status.Id != QuestionStatus.New.Id)
             {
                 return Results.BadRequest(new
                 {
@@ -40,9 +40,9 @@ internal static class UpdateRankingQuestionEndpoint
                 });
             }
 
-            rankingQuestion.Title = request.Title;
+            question.Title = request.Title;
 
-            var existingOptionIdentifiers = rankingQuestion.Options
+            var existingOptionIdentifiers = question.Options
                 .Select(x => x.ExternalIdentifier)
                 .ToArray();
 
@@ -55,15 +55,15 @@ internal static class UpdateRankingQuestionEndpoint
             var toRemoveIdentifiers = existingOptionIdentifiers.Except(modifiedOptionsIdentifiers);
             foreach (var toRemove in toRemoveIdentifiers)
             {
-                var toRemoveOption = rankingQuestion.Options.Single(x => x.ExternalIdentifier == toRemove);
-                rankingQuestion.Options.Remove(toRemoveOption);
+                var toRemoveOption = question.Options.Single(x => x.ExternalIdentifier == toRemove);
+                question.Options.Remove(toRemoveOption);
             }
 
             var toUpdateIdentifiers = modifiedOptionsIdentifiers.Intersect(existingOptionIdentifiers);
             foreach (var toUpdate in toUpdateIdentifiers)
             {
                 var source = request.Options.Single(x => x.Identifier == toUpdate);
-                var target = rankingQuestion.Options.Single(x => x.ExternalIdentifier == toUpdate);
+                var target = question.Options.Single(x => x.ExternalIdentifier == toUpdate);
 
                 target.Title = source.Title;
                 target.Description = source.Description;
@@ -71,17 +71,14 @@ internal static class UpdateRankingQuestionEndpoint
 
             foreach (var toAdd in request.Options.Where(x => x.Identifier == null))
             {
-                rankingQuestion.Options.Add(new RankingQuestionOption
-                {
-                    Title = toAdd.Title, Description = toAdd.Description
-                });
+                question.Options.Add(new QuestionOption { Title = toAdd.Title, Description = toAdd.Description });
             }
 
-            rankingQuestion.MaxSelectableItems = request.MaxSelectableItems.HasValue
-                ? Math.Min(rankingQuestion.Options.Count, request.MaxSelectableItems.Value)
+            question.MaxSelectableItems = request.MaxSelectableItems.HasValue
+                ? Math.Min(question.Options.Count, request.MaxSelectableItems.Value)
                 : request.MaxSelectableItems;
 
-            dbContext.Update(rankingQuestion);
+            dbContext.Update(question);
 
             await dbContext.SaveChangesAsync(cancellationToken);
 
@@ -89,10 +86,10 @@ internal static class UpdateRankingQuestionEndpoint
         });
     }
 
-    private record UpdateRankingQuestionRequest(
+    private record UpdateQuestionRequest(
         string Title,
         int? MaxSelectableItems,
-        List<UpdateRankingQuestionOptionRequest> Options);
+        List<UpdateQuestionOptionRequest> Options);
 
-    private record UpdateRankingQuestionOptionRequest(Guid? Identifier, string Title, string? Description);
+    private record UpdateQuestionOptionRequest(Guid? Identifier, string Title, string? Description);
 }

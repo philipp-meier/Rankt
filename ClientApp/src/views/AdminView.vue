@@ -9,23 +9,24 @@ import InputNumber from 'primevue/inputnumber';
 import Column from 'primevue/column';
 import Dialog from 'primevue/dialog';
 import Tag from 'primevue/tag';
+import Select from 'primevue/select';
 import Dropdown from 'primevue/dropdown';
 import { onBeforeMount, type Ref, ref } from 'vue';
 import { FilterMatchMode } from 'primevue/api';
 import { useToast } from 'primevue/usetoast';
-import RankingQuestionOptionEditList from '@/components/RankingQuestionOptionEditList.vue';
-import type { IRankingQuestion } from '@/entities/RankingQuestion';
+import QuestionOptionEditList from '@/components/QuestionOptionEditList.vue';
+import type { IQuestion } from '@/entities/Question';
 import { API_ENDPOINTS } from '@/ApiEndpoints';
 import TextService from '../services/TextService';
 
-const questions: Ref<IRankingQuestion[]> = ref([]);
+const questions: Ref<IQuestion[]> = ref([]);
 const availableStatuses: Ref<{ label: string; value: string }[]> = ref([]);
 
 onBeforeMount(async () => {
   fetch(API_ENDPOINTS.ManagementQuestions, { method: 'GET' }).then(async (resp) => {
     if (resp.ok) {
       const jsonResponse = await resp.json();
-      questions.value = jsonResponse.rankingQuestions;
+      questions.value = jsonResponse.questions;
       availableStatuses.value = jsonResponse.availableStatusOptions.map((x: any) => {
         return {
           label: x.name,
@@ -36,7 +37,7 @@ onBeforeMount(async () => {
   });
 });
 
-const selectedQuestions: Ref<IRankingQuestion[] | null> = ref([]);
+const selectedQuestions: Ref<IQuestion[] | null> = ref([]);
 const filters = ref({
   global: { value: null, matchMode: FilterMatchMode.CONTAINS }
 });
@@ -78,11 +79,14 @@ const questionDialog = ref(false);
 const deleteQuestionDialog = ref(false);
 const deleteQuestionsDialog = ref(false);
 
-const questionEditModel: Ref<IRankingQuestion> = ref({});
+const questionEditModel: Ref<IQuestion> = ref({});
 
 const submitted = ref(false);
+const isAddMode = ref(false);
 
 const openNew = () => {
+  isAddMode.value = true;
+  questionType.value = questionTypes[0];
   questionEditModel.value = { options: [] };
   submitted.value = false;
   questionDialog.value = true;
@@ -95,6 +99,8 @@ const saveQuestion = () => {
   submitted.value = true;
 
   if (!isValidMaxSelectableItems(questionEditModel.value)) return;
+
+  questionEditModel.value.type = questionType.value.id;
 
   if (questionEditModel?.value.title?.trim()) {
     if (questionEditModel.value.identifier) {
@@ -148,7 +154,10 @@ const saveQuestion = () => {
   }
 };
 
-const editQuestion = (selectedQuestion: IRankingQuestion) => {
+const editQuestion = (selectedQuestion: IQuestion) => {
+  isAddMode.value = false;
+  questionType.value = questionTypes.find((x) => x.id == selectedQuestion.type) ?? questionTypes[0];
+
   // Lazy-load options
   fetch(`${API_ENDPOINTS.Questions}/${selectedQuestion.identifier}`, { method: 'GET' }).then(
     async (resp) => {
@@ -161,7 +170,7 @@ const editQuestion = (selectedQuestion: IRankingQuestion) => {
   );
 };
 
-const confirmDeleteQuestion = (selectedQuestion: IRankingQuestion) => {
+const confirmDeleteQuestion = (selectedQuestion: IQuestion) => {
   questionEditModel.value = selectedQuestion;
   deleteQuestionDialog.value = true;
 };
@@ -280,11 +289,24 @@ const copyToClipboard = (identifier: string) => {
   });
 };
 
-const isValidMaxSelectableItems = (question: IRankingQuestion): boolean => {
+const isValidMaxSelectableItems = (question: IQuestion): boolean => {
   if (!question.options || !question.maxSelectableItems) return true;
 
   return question.maxSelectableItems <= question.options.length;
 };
+
+const questionTypes = [
+  {
+    id: 'RQ',
+    name: 'Ranking Question'
+  },
+  {
+    id: 'V',
+    name: 'Voting'
+  }
+];
+
+const questionType = ref(questionTypes[0]);
 </script>
 
 <template>
@@ -428,9 +450,19 @@ const isValidMaxSelectableItems = (question: IRankingQuestion): boolean => {
           >Number must not be greater than the number of available options.</small
         >
       </div>
+      <div class="field">
+        <label for="questionTypeSelection">Type</label>
+        <Select
+          id="questionTypeSelection"
+          v-model="questionType"
+          :options="questionTypes"
+          optionLabel="name"
+          :disabled="!isAddMode"
+        ></Select>
+      </div>
 
       <br />
-      <RankingQuestionOptionEditList :items="questionEditModel.options" />
+      <QuestionOptionEditList :items="questionEditModel.options" />
 
       <template #footer>
         <Button icon="pi pi-times" label="Cancel" text @click="hideDialog" />

@@ -4,36 +4,43 @@ using Rankt.Entities.Common;
 
 namespace Rankt.Entities;
 
-public class RankingQuestion : BaseAuditableEntity
+public class Question : BaseAuditableEntity
 {
     public Guid ExternalIdentifier { get; set; } = Guid.NewGuid();
 
     public required string Title { get; set; }
-    public required RankingQuestionStatus Status { get; set; }
+    public required QuestionStatus Status { get; set; }
+    public required QuestionType Type { get; set; }
     public int? MaxSelectableItems { get; set; }
 
-    public IList<RankingQuestionOption> Options { get; set; } = new List<RankingQuestionOption>();
-    public IList<RankingQuestionResponse> Responses { get; set; } = new List<RankingQuestionResponse>();
+    public IList<QuestionOption> Options { get; set; } = new List<QuestionOption>();
+    public IList<QuestionResponse> Responses { get; set; } = new List<QuestionResponse>();
 }
 
-internal sealed class RankingQuestionConfiguration : IEntityTypeConfiguration<RankingQuestion>
+internal sealed class QuestionConfiguration : IEntityTypeConfiguration<Question>
 {
-    public void Configure(EntityTypeBuilder<RankingQuestion> builder)
+    public void Configure(EntityTypeBuilder<Question> builder)
     {
         builder.Property(x => x.Title)
             .HasMaxLength(100)
             .IsRequired();
 
+        builder.Navigation(x => x.Status)
+            .IsRequired();
+
+        builder.Navigation(x => x.Type)
+            .IsRequired();
+
         builder.HasMany(x => x.Options)
-            .WithOne(x => x.RankingQuestion)
-            .HasForeignKey(x => x.RankingQuestionId)
+            .WithOne(x => x.Question)
+            .HasForeignKey(x => x.QuestionId)
             .OnDelete(DeleteBehavior.Cascade)
             .HasPrincipalKey(x => x.Id)
             .IsRequired();
 
         builder.HasMany(x => x.Responses)
-            .WithOne(x => x.RankingQuestion)
-            .HasForeignKey(x => x.RankingQuestionId)
+            .WithOne(x => x.Question)
+            .HasForeignKey(x => x.QuestionId)
             .OnDelete(DeleteBehavior.Cascade)
             .HasPrincipalKey(x => x.Id)
             .IsRequired(false);
