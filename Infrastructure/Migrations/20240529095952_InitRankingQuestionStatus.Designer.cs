@@ -11,8 +11,8 @@ using Rankt.Infrastructure.Persistence;
 namespace Rankt.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240529095952_InitRankingQuestionStatus")]
-    partial class InitRankingQuestionStatus
+    [Migration("20240529095952_InitQuestionStatus")]
+    partial class InitQuestionStatus
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -244,7 +244,7 @@ namespace Rankt.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Rankt.Entities.RankingQuestion", b =>
+            modelBuilder.Entity("Rankt.Entities.Question", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -287,10 +287,10 @@ namespace Rankt.Infrastructure.Migrations
 
                     b.HasIndex("StatusId");
 
-                    b.ToTable("RankingQuestions");
+                    b.ToTable("Questions");
                 });
 
-            modelBuilder.Entity("Rankt.Entities.RankingQuestionOption", b =>
+            modelBuilder.Entity("Rankt.Entities.QuestionOption", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -315,7 +315,7 @@ namespace Rankt.Infrastructure.Migrations
                     b.Property<string>("LastModifiedById")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("RankingQuestionId")
+                    b.Property<int>("QuestionId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Title")
@@ -332,12 +332,12 @@ namespace Rankt.Infrastructure.Migrations
 
                     b.HasIndex("LastModifiedById");
 
-                    b.HasIndex("RankingQuestionId");
+                    b.HasIndex("QuestionId");
 
-                    b.ToTable("RankingQuestionOptions");
+                    b.ToTable("QuestionOptions");
                 });
 
-            modelBuilder.Entity("Rankt.Entities.RankingQuestionResponse", b =>
+            modelBuilder.Entity("Rankt.Entities.QuestionResponse", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -349,7 +349,7 @@ namespace Rankt.Infrastructure.Migrations
                     b.Property<Guid>("ExternalIdentifier")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("RankingQuestionId")
+                    b.Property<int>("QuestionId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Username")
@@ -359,12 +359,12 @@ namespace Rankt.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RankingQuestionId");
+                    b.HasIndex("QuestionId");
 
-                    b.ToTable("RankingQuestionResponses");
+                    b.ToTable("QuestionResponses");
                 });
 
-            modelBuilder.Entity("Rankt.Entities.RankingQuestionResponseItem", b =>
+            modelBuilder.Entity("Rankt.Entities.QuestionResponseItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -373,22 +373,22 @@ namespace Rankt.Infrastructure.Migrations
                     b.Property<int>("Rank")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("RankingQuestionOptionId")
+                    b.Property<int>("QuestionOptionId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("RankingQuestionResponseId")
+                    b.Property<int>("QuestionResponseId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RankingQuestionOptionId");
+                    b.HasIndex("QuestionOptionId");
 
-                    b.HasIndex("RankingQuestionResponseId");
+                    b.HasIndex("QuestionResponseId");
 
-                    b.ToTable("RankingQuestionResponseItems");
+                    b.ToTable("QuestionResponseItems");
                 });
 
-            modelBuilder.Entity("Rankt.Entities.RankingQuestionStatus", b =>
+            modelBuilder.Entity("Rankt.Entities.QuestionStatus", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -400,7 +400,7 @@ namespace Rankt.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RankingQuestionStatus");
+                    b.ToTable("QuestionStatus");
 
                     b.HasData(
                         new
@@ -471,7 +471,7 @@ namespace Rankt.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Rankt.Entities.RankingQuestion", b =>
+            modelBuilder.Entity("Rankt.Entities.Question", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "CreatedBy")
                         .WithMany()
@@ -481,7 +481,7 @@ namespace Rankt.Infrastructure.Migrations
                         .WithMany()
                         .HasForeignKey("LastModifiedById");
 
-                    b.HasOne("Rankt.Entities.RankingQuestionStatus", "Status")
+                    b.HasOne("Rankt.Entities.QuestionStatus", "Status")
                         .WithMany()
                         .HasForeignKey("StatusId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -494,7 +494,7 @@ namespace Rankt.Infrastructure.Migrations
                     b.Navigation("Status");
                 });
 
-            modelBuilder.Entity("Rankt.Entities.RankingQuestionOption", b =>
+            modelBuilder.Entity("Rankt.Entities.QuestionOption", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "CreatedBy")
                         .WithMany()
@@ -504,9 +504,9 @@ namespace Rankt.Infrastructure.Migrations
                         .WithMany()
                         .HasForeignKey("LastModifiedById");
 
-                    b.HasOne("Rankt.Entities.RankingQuestion", "RankingQuestion")
+                    b.HasOne("Rankt.Entities.Question", "Question")
                         .WithMany("Options")
-                        .HasForeignKey("RankingQuestionId")
+                        .HasForeignKey("QuestionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -514,46 +514,46 @@ namespace Rankt.Infrastructure.Migrations
 
                     b.Navigation("LastModifiedBy");
 
-                    b.Navigation("RankingQuestion");
+                    b.Navigation("Question");
                 });
 
-            modelBuilder.Entity("Rankt.Entities.RankingQuestionResponse", b =>
+            modelBuilder.Entity("Rankt.Entities.QuestionResponse", b =>
                 {
-                    b.HasOne("Rankt.Entities.RankingQuestion", "RankingQuestion")
+                    b.HasOne("Rankt.Entities.Question", "Question")
                         .WithMany("Responses")
-                        .HasForeignKey("RankingQuestionId")
+                        .HasForeignKey("QuestionId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.Navigation("RankingQuestion");
+                    b.Navigation("Question");
                 });
 
-            modelBuilder.Entity("Rankt.Entities.RankingQuestionResponseItem", b =>
+            modelBuilder.Entity("Rankt.Entities.QuestionResponseItem", b =>
                 {
-                    b.HasOne("Rankt.Entities.RankingQuestionResponse", "RankingQuestionOption")
+                    b.HasOne("Rankt.Entities.QuestionResponse", "QuestionOption")
                         .WithMany()
-                        .HasForeignKey("RankingQuestionOptionId")
+                        .HasForeignKey("QuestionOptionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Rankt.Entities.RankingQuestionResponse", "RankingQuestionResponse")
+                    b.HasOne("Rankt.Entities.QuestionResponse", "QuestionResponse")
                         .WithMany("ResponseItems")
-                        .HasForeignKey("RankingQuestionResponseId")
+                        .HasForeignKey("QuestionResponseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("RankingQuestionOption");
+                    b.Navigation("QuestionOption");
 
-                    b.Navigation("RankingQuestionResponse");
+                    b.Navigation("QuestionResponse");
                 });
 
-            modelBuilder.Entity("Rankt.Entities.RankingQuestion", b =>
+            modelBuilder.Entity("Rankt.Entities.Question", b =>
                 {
                     b.Navigation("Options");
 
                     b.Navigation("Responses");
                 });
 
-            modelBuilder.Entity("Rankt.Entities.RankingQuestionResponse", b =>
+            modelBuilder.Entity("Rankt.Entities.QuestionResponse", b =>
                 {
                     b.Navigation("ResponseItems");
                 });

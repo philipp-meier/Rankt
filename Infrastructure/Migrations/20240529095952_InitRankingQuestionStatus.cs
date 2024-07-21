@@ -5,7 +5,7 @@
 namespace Rankt.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitRankingQuestionStatus : Migration
+    public partial class InitQuestionStatus : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
