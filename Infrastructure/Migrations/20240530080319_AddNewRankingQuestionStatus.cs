@@ -7,7 +7,7 @@
 namespace Rankt.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class AddNewRankingQuestionStatus : Migration
+    public partial class AddNewQuestionStatus : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -20,7 +20,7 @@ namespace Rankt.Infrastructure.Migrations
                 values: new object[] { "53746146-6c35-4731-a3aa-8ef0e77153cb", "AQAAAAIAAYagAAAAEOxn/UHtZIuuNXPDHO99iN9N7pQ3cFwvmXc6EvFxk+j5n+i2RMSLrALLgUzhs1TPnA==", "23dd244a-07a5-4cd7-ad88-5894d2cbae1f" });
 
             migrationBuilder.InsertData(
-                table: "RankingQuestionStatus",
+                table: "QuestionStatus",
                 columns: new[] { "Id", "Identifier", "Name" },
                 values: new object[,]
                 {
@@ -33,12 +33,12 @@ namespace Rankt.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DeleteData(
-                table: "RankingQuestionStatus",
+                table: "QuestionStatus",
                 keyColumn: "Id",
                 keyValue: 1);
 
             migrationBuilder.DeleteData(
-                table: "RankingQuestionStatus",
+                table: "QuestionStatus",
                 keyColumn: "Id",
                 keyValue: 2);
 

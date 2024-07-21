@@ -8,13 +8,13 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Rankt.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitRankingQuestions : Migration
+    public partial class InitQuestions : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "RankingQuestionStatus",
+                name: "QuestionStatus",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -23,11 +23,11 @@ namespace Rankt.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RankingQuestionStatus", x => x.Id);
+                    table.PrimaryKey("PK_QuestionStatus", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "RankingQuestions",
+                name: "Questions",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -43,32 +43,32 @@ namespace Rankt.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RankingQuestions", x => x.Id);
+                    table.PrimaryKey("PK_Questions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_RankingQuestions_AspNetUsers_CreatedById",
+                        name: "FK_Questions_AspNetUsers_CreatedById",
                         column: x => x.CreatedById,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_RankingQuestions_AspNetUsers_LastModifiedById",
+                        name: "FK_Questions_AspNetUsers_LastModifiedById",
                         column: x => x.LastModifiedById,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_RankingQuestions_RankingQuestionStatus_StatusId",
+                        name: "FK_Questions_QuestionStatus_StatusId",
                         column: x => x.StatusId,
-                        principalTable: "RankingQuestionStatus",
+                        principalTable: "QuestionStatus",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "RankingQuestionOptions",
+                name: "QuestionOptions",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    RankingQuestionId = table.Column<int>(type: "INTEGER", nullable: false),
+                    QuestionId = table.Column<int>(type: "INTEGER", nullable: false),
                     ExternalIdentifier = table.Column<Guid>(type: "TEXT", nullable: false),
                     Title = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
                     Description = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true),
@@ -79,70 +79,70 @@ namespace Rankt.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RankingQuestionOptions", x => x.Id);
+                    table.PrimaryKey("PK_QuestionOptions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_RankingQuestionOptions_AspNetUsers_CreatedById",
+                        name: "FK_QuestionOptions_AspNetUsers_CreatedById",
                         column: x => x.CreatedById,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_RankingQuestionOptions_AspNetUsers_LastModifiedById",
+                        name: "FK_QuestionOptions_AspNetUsers_LastModifiedById",
                         column: x => x.LastModifiedById,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_RankingQuestionOptions_RankingQuestions_RankingQuestionId",
-                        column: x => x.RankingQuestionId,
-                        principalTable: "RankingQuestions",
+                        name: "FK_QuestionOptions_Questions_QuestionId",
+                        column: x => x.QuestionId,
+                        principalTable: "Questions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "RankingQuestionResponses",
+                name: "QuestionResponses",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    RankingQuestionId = table.Column<int>(type: "INTEGER", nullable: false),
+                    QuestionId = table.Column<int>(type: "INTEGER", nullable: false),
                     ExternalIdentifier = table.Column<Guid>(type: "TEXT", nullable: false),
                     Username = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
                     Created = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RankingQuestionResponses", x => x.Id);
+                    table.PrimaryKey("PK_QuestionResponses", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_RankingQuestionResponses_RankingQuestions_RankingQuestionId",
-                        column: x => x.RankingQuestionId,
-                        principalTable: "RankingQuestions",
+                        name: "FK_QuestionResponses_Questions_QuestionId",
+                        column: x => x.QuestionId,
+                        principalTable: "Questions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "RankingQuestionResponseItems",
+                name: "QuestionResponseItems",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    RankingQuestionResponseId = table.Column<int>(type: "INTEGER", nullable: false),
-                    RankingQuestionOptionId = table.Column<int>(type: "INTEGER", nullable: false),
+                    QuestionResponseId = table.Column<int>(type: "INTEGER", nullable: false),
+                    QuestionOptionId = table.Column<int>(type: "INTEGER", nullable: false),
                     Rank = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RankingQuestionResponseItems", x => x.Id);
+                    table.PrimaryKey("PK_QuestionResponseItems", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_RankingQuestionResponseItems_RankingQuestionResponses_RankingQuestionOptionId",
-                        column: x => x.RankingQuestionOptionId,
-                        principalTable: "RankingQuestionResponses",
+                        name: "FK_QuestionResponseItems_QuestionResponses_QuestionOptionId",
+                        column: x => x.QuestionOptionId,
+                        principalTable: "QuestionResponses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_RankingQuestionResponseItems_RankingQuestionResponses_RankingQuestionResponseId",
-                        column: x => x.RankingQuestionResponseId,
-                        principalTable: "RankingQuestionResponses",
+                        name: "FK_QuestionResponseItems_QuestionResponses_QuestionResponseId",
+                        column: x => x.QuestionResponseId,
+                        principalTable: "QuestionResponses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -155,7 +155,7 @@ namespace Rankt.Infrastructure.Migrations
                 values: new object[] { "c0e0b210-8bc1-4226-bee8-fe232e21733f", "AQAAAAIAAYagAAAAEGKmBhHcPlr49Dlp1mKNfEFozb3a9wvJSjHDvEOJy8R+KFZNyGG1nguTqQEEmUd+Ng==", "fcbe8dc0-1298-492e-9661-71f64d9b4162" });
 
             migrationBuilder.InsertData(
-                table: "RankingQuestionStatus",
+                table: "QuestionStatus",
                 columns: new[] { "Id", "Name" },
                 values: new object[,]
                 {
@@ -165,60 +165,60 @@ namespace Rankt.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_RankingQuestionOptions_CreatedById",
-                table: "RankingQuestionOptions",
+                name: "IX_QuestionOptions_CreatedById",
+                table: "QuestionOptions",
                 column: "CreatedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RankingQuestionOptions_ExternalIdentifier",
-                table: "RankingQuestionOptions",
+                name: "IX_QuestionOptions_ExternalIdentifier",
+                table: "QuestionOptions",
                 column: "ExternalIdentifier",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_RankingQuestionOptions_LastModifiedById",
-                table: "RankingQuestionOptions",
+                name: "IX_QuestionOptions_LastModifiedById",
+                table: "QuestionOptions",
                 column: "LastModifiedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RankingQuestionOptions_RankingQuestionId",
-                table: "RankingQuestionOptions",
-                column: "RankingQuestionId");
+                name: "IX_QuestionOptions_QuestionId",
+                table: "QuestionOptions",
+                column: "QuestionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RankingQuestionResponseItems_RankingQuestionOptionId",
-                table: "RankingQuestionResponseItems",
-                column: "RankingQuestionOptionId");
+                name: "IX_QuestionResponseItems_QuestionOptionId",
+                table: "QuestionResponseItems",
+                column: "QuestionOptionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RankingQuestionResponseItems_RankingQuestionResponseId",
-                table: "RankingQuestionResponseItems",
-                column: "RankingQuestionResponseId");
+                name: "IX_QuestionResponseItems_QuestionResponseId",
+                table: "QuestionResponseItems",
+                column: "QuestionResponseId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RankingQuestionResponses_RankingQuestionId",
-                table: "RankingQuestionResponses",
-                column: "RankingQuestionId");
+                name: "IX_QuestionResponses_QuestionId",
+                table: "QuestionResponses",
+                column: "QuestionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RankingQuestions_CreatedById",
-                table: "RankingQuestions",
+                name: "IX_Questions_CreatedById",
+                table: "Questions",
                 column: "CreatedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RankingQuestions_ExternalIdentifier",
-                table: "RankingQuestions",
+                name: "IX_Questions_ExternalIdentifier",
+                table: "Questions",
                 column: "ExternalIdentifier",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_RankingQuestions_LastModifiedById",
-                table: "RankingQuestions",
+                name: "IX_Questions_LastModifiedById",
+                table: "Questions",
                 column: "LastModifiedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RankingQuestions_StatusId",
-                table: "RankingQuestions",
+                name: "IX_Questions_StatusId",
+                table: "Questions",
                 column: "StatusId");
         }
 
@@ -226,19 +226,19 @@ namespace Rankt.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "RankingQuestionOptions");
+                name: "QuestionOptions");
 
             migrationBuilder.DropTable(
-                name: "RankingQuestionResponseItems");
+                name: "QuestionResponseItems");
 
             migrationBuilder.DropTable(
-                name: "RankingQuestionResponses");
+                name: "QuestionResponses");
 
             migrationBuilder.DropTable(
-                name: "RankingQuestions");
+                name: "Questions");
 
             migrationBuilder.DropTable(
-                name: "RankingQuestionStatus");
+                name: "QuestionStatus");
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",

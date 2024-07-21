@@ -7,24 +7,24 @@
 namespace Rankt.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class UpdateRankingQuestionStatus : Migration
+    public partial class UpdateQuestionStatus : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DeleteData(
-                table: "RankingQuestionStatus",
+                table: "QuestionStatus",
                 keyColumn: "Id",
                 keyValue: 1);
 
             migrationBuilder.DeleteData(
-                table: "RankingQuestionStatus",
+                table: "QuestionStatus",
                 keyColumn: "Id",
                 keyValue: 2);
 
             migrationBuilder.AddColumn<string>(
                 name: "Identifier",
-                table: "RankingQuestionStatus",
+                table: "QuestionStatus",
                 type: "TEXT",
                 nullable: false,
                 defaultValue: "");
@@ -37,14 +37,14 @@ namespace Rankt.Infrastructure.Migrations
                 values: new object[] { "92318cff-f862-493a-9a34-170f26bba41a", "AQAAAAIAAYagAAAAEBT0vE3AAOVD28XRr4NiP1HpI/GNVLs2LOMcucCq1ET08mVkvQlv975PgKw7UXonTg==", "5d8e2fad-3846-417a-83e5-74f2dba64d88" });
 
             migrationBuilder.UpdateData(
-                table: "RankingQuestionStatus",
+                table: "QuestionStatus",
                 keyColumn: "Id",
                 keyValue: 3,
                 columns: new[] { "Identifier", "Name" },
                 values: new object[] { "INPROGRESS", "in progress" });
 
             migrationBuilder.InsertData(
-                table: "RankingQuestionStatus",
+                table: "QuestionStatus",
                 columns: new[] { "Id", "Identifier", "Name" },
                 values: new object[,]
                 {
@@ -57,18 +57,18 @@ namespace Rankt.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DeleteData(
-                table: "RankingQuestionStatus",
+                table: "QuestionStatus",
                 keyColumn: "Id",
                 keyValue: 4);
 
             migrationBuilder.DeleteData(
-                table: "RankingQuestionStatus",
+                table: "QuestionStatus",
                 keyColumn: "Id",
                 keyValue: 5);
 
             migrationBuilder.DropColumn(
                 name: "Identifier",
-                table: "RankingQuestionStatus");
+                table: "QuestionStatus");
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",
@@ -78,14 +78,14 @@ namespace Rankt.Infrastructure.Migrations
                 values: new object[] { "221d6ce1-cb21-4d7a-84fe-3c9fabda3944", "AQAAAAIAAYagAAAAEABZxYL8Surh/6KBIkTzpPifCmR+m2EVOkP/yZVQ4+zzODBlm19lQkk6ztAqjAq6eQ==", "06578885-2e89-4603-8a06-b476435ec33f" });
 
             migrationBuilder.UpdateData(
-                table: "RankingQuestionStatus",
+                table: "QuestionStatus",
                 keyColumn: "Id",
                 keyValue: 3,
                 column: "Name",
                 value: "archived");
 
             migrationBuilder.InsertData(
-                table: "RankingQuestionStatus",
+                table: "QuestionStatus",
                 columns: new[] { "Id", "Name" },
                 values: new object[,]
                 {
