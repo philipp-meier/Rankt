@@ -1,4 +1,4 @@
-import type { IQuestionOption } from '@/entities/QuestionOption';
+import type { IQuestionOption } from '@/Entities/QuestionOption';
 
 export interface IQuestion {
   identifier?: string;

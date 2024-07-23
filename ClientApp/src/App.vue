@@ -6,7 +6,7 @@ import { config } from './config';
 import Toast from 'primevue/toast';
 
 import { storeToRefs } from 'pinia';
-import { useAuthStore } from '@/stores/authStore';
+import { useAuthStore } from '@/Shared/Stores/authStore';
 
 const router = useRouter();
 

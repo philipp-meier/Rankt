@@ -2,9 +2,9 @@
 import Button from 'primevue/button';
 import OrderList from 'primevue/orderlist';
 import { useToast } from 'primevue/usetoast';
-import type { IQuestionOption } from '@/entities/QuestionOption';
+import type { IQuestionOption } from '@/Entities/QuestionOption';
 import { type Ref, ref } from 'vue';
-import type { IQuestion } from '@/entities/Question';
+import type { IQuestion } from '@/Entities/Question';
 import { API_ENDPOINTS } from '@/ApiEndpoints';
 
 const props = defineProps<{
