@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { computed, onBeforeMount, type Ref, ref } from 'vue';
-import type { IQuestion } from '@/entities/Question';
-import { QuestionService } from '@/services/QuestionService';
+import type { IQuestion } from '@/Entities/Question';
+import { QuestionService } from '@/Shared/Services/QuestionService';
 import { API_ENDPOINTS } from '@/ApiEndpoints';
 import Chart from 'primevue/chart';
 import InlineMessage from 'primevue/inlinemessage';
-import RankingQuestionOptionResponseControl from '@/components/RankingQuestionOptionResponseControl.vue';
+import RankingQuestionOptionResponseControl from '@/Features/RankingQuestion/RankingQuestionOptionResponseControl.vue';
 
 const props = defineProps<{
   question: IQuestion;

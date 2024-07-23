@@ -4,12 +4,12 @@ import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import Checkbox from 'primevue/checkbox';
 import InlineMessage from 'primevue/inlinemessage';
-import type { IQuestion } from '@/entities/Question';
+import type { IQuestion } from '@/Entities/Question';
 import { computed, onBeforeMount, ref, type Ref } from 'vue';
 import { useToast } from 'primevue/usetoast';
-import type { IQuestionOption } from '@/entities/QuestionOption';
+import type { IQuestionOption } from '@/Entities/QuestionOption';
 import { API_ENDPOINTS } from '@/ApiEndpoints';
-import { QuestionService } from '@/services/QuestionService';
+import { QuestionService } from '@/Shared/Services/QuestionService';
 
 const props = defineProps<{
   question: IQuestion;

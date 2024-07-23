@@ -3,12 +3,12 @@ import { useRoute, useRouter } from 'vue-router';
 import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
 import { computed, onBeforeMount, type Ref, ref } from 'vue';
-import type { IQuestion } from '@/entities/Question';
-import { QuestionService } from '@/services/QuestionService';
+import type { IQuestion } from '@/Entities/Question';
+import { QuestionService } from '@/Shared/Services/QuestionService';
 import { API_ENDPOINTS } from '@/ApiEndpoints';
-import TextService from '../services/TextService';
-import RankingQuestionControl from '@/components/RankingQuestionControl.vue';
-import VotingQuestionControl from '@/components/VotingQuestionControl.vue';
+import TextService from '@/Shared/Services/TextService';
+import RankingQuestionControl from '@/Features/RankingQuestion/RankingQuestionControl.vue';
+import VotingQuestionControl from '@/Features/VotingQuestion/VotingQuestionControl.vue';
 
 const route = useRoute();
 const router = useRouter();

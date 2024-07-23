@@ -3,7 +3,7 @@ import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';
-import type { IQuestionOption } from '@/entities/QuestionOption';
+import type { IQuestionOption } from '@/Entities/QuestionOption';
 import { type Ref, ref } from 'vue';
 
 const props = defineProps<{

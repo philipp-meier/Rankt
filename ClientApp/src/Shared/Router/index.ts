@@ -1,10 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import HomeView from '../views/HomeView.vue';
-import LoginView from '../views/LoginView.vue';
-import LogoutView from '@/views/LogoutView.vue';
-import QuestionView from '@/views/QuestionView.vue';
-import AdminView from '@/views/AdminView.vue';
-import { useAuthStore } from '@/stores/authStore';
+import HomeView from '@/Shared/Views/HomeView.vue';
+import LoginView from '@/Shared/Views/LoginView.vue';
+import LogoutView from '@/Shared/Views/LogoutView.vue';
+import QuestionView from '@/Shared/Views/QuestionView.vue';
+import AdminView from '@/Features/AdminPage/AdminView.vue';
+import { useAuthStore } from '@/Shared/Stores/authStore';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),

@@ -4,7 +4,7 @@ import Password from 'primevue/password';
 import Button from 'primevue/button';
 import { type Ref, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { useAuthStore } from '@/stores/authStore';
+import { useAuthStore } from '@/Shared/Stores/authStore';
 import { useToast } from 'primevue/usetoast';
 
 const username: Ref<string | null> = ref(null);

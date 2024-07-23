@@ -1,10 +1,10 @@
-import './assets/main.css';
+import './main.css';
 
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 
 import App from './App.vue';
-import router from './router';
+import router from './Shared/Router';
 import PrimeVue from 'primevue/config';
 import Aura from 'primevue/themes/aura';
 import ToastService from 'primevue/toastservice';

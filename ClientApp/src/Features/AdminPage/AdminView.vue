@@ -14,10 +14,10 @@ import Dropdown from 'primevue/dropdown';
 import { onBeforeMount, type Ref, ref } from 'vue';
 import { FilterMatchMode } from 'primevue/api';
 import { useToast } from 'primevue/usetoast';
-import QuestionOptionEditList from '@/components/QuestionOptionEditList.vue';
-import type { IQuestion } from '@/entities/Question';
+import QuestionOptionEditList from '@/Features/AdminPage/QuestionOptionEditList.vue';
+import type { IQuestion } from '@/Entities/Question';
 import { API_ENDPOINTS } from '@/ApiEndpoints';
-import TextService from '../services/TextService';
+import TextService from '@/Shared/Services/TextService';
 
 const questions: Ref<IQuestion[]> = ref([]);
 const availableStatuses: Ref<{ label: string; value: string }[]> = ref([]);
