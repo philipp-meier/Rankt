@@ -60,7 +60,12 @@ const rowData = computed<IRowData[]>(() => {
 });
 
 const columnData = ref(
-  options.value.map((o, index) => ({ identifier: o.identifier, title: o.title, index }))
+  options.value.map((o, index) => ({
+    identifier: o.identifier,
+    title: o.title,
+    description: o.description,
+    index
+  }))
 );
 
 const submit = () => {
@@ -116,25 +121,12 @@ const responseStats = options.value.map((o) => {
 const maxResponses = Math.max(...responseStats.map((x) => x.responseCount));
 
 const tryFetchResult = async (): Promise<boolean> => {
-  if (await checkIfResultsAvailable()) {
-    result.value = await getResult();
+  const resultValue = await QuestionService.getResult(question.value.identifier!);
+  if (resultValue) {
+    result.value = resultValue;
     return true;
   }
-
   return false;
-};
-
-const checkIfResultsAvailable = async (): Promise<boolean> => {
-  const resp = await fetch(`${API_ENDPOINTS.Questions}/${question.value?.identifier!}/result`, {
-    method: 'HEAD'
-  });
-  return resp.ok;
-};
-const getResult = async (): Promise<any> => {
-  const resp = await fetch(`${API_ENDPOINTS.Questions}/${question.value?.identifier!}/result`, {
-    method: 'GET'
-  });
-  return await resp.json();
 };
 </script>
 
@@ -170,9 +162,12 @@ const getResult = async (): Promise<any> => {
         style="text-align: center"
       >
         <template #header>
-          <div style="text-align: center; width: 100%">
+          <div class="header">
             <div class="date-header">
               {{ col.title }}
+            </div>
+            <div class="description" v-if="col.description">
+              {{ col.description }}
             </div>
             <div
               :style="
@@ -211,7 +206,16 @@ i.pi-times {
   color: red;
 }
 
-div.date-header {
+div.header {
+  text-align: center;
+  width: 100%;
+}
+
+div.header > div.date-header {
   font-size: 1.1em;
+}
+
+div.header > div.description {
+  font-size: 0.9em;
 }
 </style>

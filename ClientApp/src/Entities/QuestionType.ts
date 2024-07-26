@@ -1,4 +1,4 @@
 export interface IQuestionType {
-  id: string;
+  identifier: string;
   name: string;
 }

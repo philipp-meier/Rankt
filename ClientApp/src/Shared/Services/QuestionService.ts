@@ -1,3 +1,5 @@
+import { API_ENDPOINTS } from '@/ApiEndpoints';
+
 export class QuestionService {
   static hasVoted(questionId: string, username: string): boolean {
     const state = this.getState();
@@ -27,6 +29,22 @@ export class QuestionService {
 
   private static setState(state: UserState) {
     localStorage.setItem('userState', JSON.stringify(state));
+  }
+
+  public static async getResult(questionIdentifier: string): Promise<any | null> {
+    const questionAvailableResponse = await fetch(
+      `${API_ENDPOINTS.Questions}/${questionIdentifier!}/result`,
+      {
+        method: 'HEAD'
+      }
+    );
+
+    if (!questionAvailableResponse.ok) return null;
+
+    const resp = await fetch(`${API_ENDPOINTS.Questions}/${questionIdentifier!}/result`, {
+      method: 'GET'
+    });
+    return await resp.json();
   }
 }
 

@@ -27,9 +27,12 @@ internal static class CreateQuestionEndpoint
                 question.Options.Add(new QuestionOption { Title = option.Title, Description = option.Description });
             }
 
-            question.MaxSelectableItems = command.MaxSelectableItems.HasValue
-                ? Math.Min(question.Options.Count, command.MaxSelectableItems.Value)
-                : command.MaxSelectableItems;
+            if (type.Identifier != QuestionType.Voting.Identifier)
+            {
+                question.MaxSelectableItems = command.MaxSelectableItems.HasValue
+                    ? Math.Min(question.Options.Count, command.MaxSelectableItems.Value)
+                    : command.MaxSelectableItems;
+            }
 
             dbContext.Add(question);
 
