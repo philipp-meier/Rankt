@@ -35,9 +35,17 @@ or https://localhost:7151/swagger, if you are interested in the OpenAPI document
 
 <kbd><img src="./Data/Images/Question.png" alt="Ranking Question"></kbd>
 
-### Result
+### Ranking Question Result
 
 <kbd><img src="./Data/Images/QuestionResult.png" alt="Ranking Question Result"></kbd>
+
+### Voting Question
+
+<kbd><img src="./Data/Images/VotingQuestion.png" alt="Voting Question"></kbd>
+
+### Voting Question Result
+
+<kbd><img src="./Data/Images/VotingQuestionResult.png" alt="Voting Question Result"></kbd>
 
 ## Documentation
 
