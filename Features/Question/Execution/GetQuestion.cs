@@ -52,8 +52,11 @@ internal static class GetQuestionEndpoint
                 Created = question.Created,
                 Options = question.Options.Select(x => new GetQuestionOptionResponse
                 {
-                    Identifier = x.ExternalIdentifier, Title = x.Title, Description = x.Description
-                }).OrderBy(x => x.Title).ToList(),
+                    Identifier = x.ExternalIdentifier,
+                    Title = x.Title,
+                    Position = x.Position,
+                    Description = x.Description
+                }).OrderBy(x => x.Position).ToList(),
                 Responses = includeResponses
                     ? question.Responses.Select(r => new GetQuestionVoterResponse
                     {
@@ -85,6 +88,7 @@ internal static class GetQuestionEndpoint
     {
         public required string Title { get; set; }
         public string? Description { get; set; }
+        public int Position { get; set; }
         public Guid Identifier { get; set; }
     }
 

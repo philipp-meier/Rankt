@@ -24,7 +24,10 @@ internal static class CreateQuestionEndpoint
 
             foreach (var option in command.Options)
             {
-                question.Options.Add(new QuestionOption { Title = option.Title, Description = option.Description });
+                question.Options.Add(new QuestionOption
+                {
+                    Title = option.Title, Position = option.Position, Description = option.Description
+                });
             }
 
             if (type.Identifier != QuestionType.Voting.Identifier)
@@ -51,5 +54,5 @@ internal static class CreateQuestionEndpoint
         int? MaxSelectableItems,
         IList<CreateQuestionOptionRequest> Options);
 
-    private record CreateQuestionOptionRequest(string Title, string? Description);
+    private record CreateQuestionOptionRequest(string Title, int Position, string? Description);
 }

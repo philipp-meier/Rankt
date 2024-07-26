@@ -1,11 +1,6 @@
 export interface IQuestionOption {
   identifier?: string;
+  position: number;
   title: string;
   description?: string;
-  voters?: IQuestionOptionVoters[];
-}
-
-export interface IQuestionOptionVoters {
-  identifier: string;
-  username: string;
 }
