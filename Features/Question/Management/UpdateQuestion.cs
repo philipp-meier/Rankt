@@ -78,7 +78,7 @@ internal static class UpdateQuestionEndpoint
                 });
             }
 
-            if (question.Type?.Identifier != QuestionType.Voting.Identifier)
+            if (question.Type.Identifier != QuestionType.Voting.Identifier)
             {
                 question.MaxSelectableItems = request.MaxSelectableItems.HasValue
                     ? Math.Min(question.Options.Count, request.MaxSelectableItems.Value)
