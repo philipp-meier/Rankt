@@ -2,7 +2,6 @@
 import { computed, onBeforeMount, type Ref, ref } from 'vue';
 import type { IQuestion } from '@/Entities/Question';
 import { QuestionService } from '@/Shared/Services/QuestionService';
-import { API_ENDPOINTS } from '@/ApiEndpoints';
 import Chart from 'primevue/chart';
 import InlineMessage from 'primevue/inlinemessage';
 import RankingQuestionOptionResponseControl from '@/Features/RankingQuestion/RankingQuestionOptionResponseControl.vue';
@@ -36,25 +35,12 @@ const onVoted = () => {
 };
 
 const tryFetchResult = async (): Promise<boolean> => {
-  if (await checkIfResultsAvailable()) {
-    result.value = await getResult();
+  const resultValue = await QuestionService.getResult(question.value.identifier!);
+  if (resultValue) {
+    result.value = resultValue;
     return true;
   }
-
   return false;
-};
-
-const checkIfResultsAvailable = async (): Promise<boolean> => {
-  const resp = await fetch(`${API_ENDPOINTS.Questions}/${question.value?.identifier!}/result`, {
-    method: 'HEAD'
-  });
-  return resp.ok;
-};
-const getResult = async (): Promise<any> => {
-  const resp = await fetch(`${API_ENDPOINTS.Questions}/${question.value?.identifier!}/result`, {
-    method: 'GET'
-  });
-  return await resp.json();
 };
 
 const resultChartData = computed(() => {

@@ -25,6 +25,7 @@ internal static class UpdateQuestionEndpoint
             var question = await dbContext.Questions
                 .Where(x => x.CreatedBy == user)
                 .Include(x => x.Status)
+                .Include(question => question.Type)
                 .FirstOrDefaultAsync(x => x.ExternalIdentifier == id, cancellationToken);
 
             if (question == null)
@@ -74,9 +75,12 @@ internal static class UpdateQuestionEndpoint
                 question.Options.Add(new QuestionOption { Title = toAdd.Title, Description = toAdd.Description });
             }
 
-            question.MaxSelectableItems = request.MaxSelectableItems.HasValue
-                ? Math.Min(question.Options.Count, request.MaxSelectableItems.Value)
-                : request.MaxSelectableItems;
+            if (question.Type?.Identifier != QuestionType.Voting.Identifier)
+            {
+                question.MaxSelectableItems = request.MaxSelectableItems.HasValue
+                    ? Math.Min(question.Options.Count, request.MaxSelectableItems.Value)
+                    : request.MaxSelectableItems;
+            }
 
             dbContext.Update(question);
 

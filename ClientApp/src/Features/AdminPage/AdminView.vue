@@ -103,7 +103,7 @@ const saveQuestion = () => {
 
   if (!isValidMaxSelectableItems(questionEditModel.value)) return;
 
-  questionEditModel.value.type = questionType.value.id;
+  questionEditModel.value.type = questionType.value.identifier;
 
   if (questionEditModel?.value.title?.trim()) {
     if (questionEditModel.value.identifier) {
@@ -160,7 +160,8 @@ const saveQuestion = () => {
 const editQuestion = (selectedQuestion: IQuestion) => {
   isAddMode.value = false;
   questionType.value =
-    availableTypes.value.find((x) => x.id == selectedQuestion.type) ?? availableTypes.value[0];
+    availableTypes.value.find((x) => x.identifier == selectedQuestion.type) ??
+    availableTypes.value[0];
 
   // Lazy-load options
   fetch(`${API_ENDPOINTS.Questions}/${selectedQuestion.identifier}`, { method: 'GET' }).then(
@@ -296,7 +297,9 @@ const copyToClipboard = (identifier: string) => {
 const isValidMaxSelectableItems = (question: IQuestion): boolean => {
   if (!question.options || !question.maxSelectableItems) return true;
 
-  return question.maxSelectableItems <= question.options.length;
+  return (
+    question.maxSelectableItems <= question.options.length || questionType.value.identifier == 'V'
+  );
 };
 
 const questionType = ref(availableTypes.value[0]);
@@ -431,7 +434,7 @@ const questionType = ref(availableTypes.value[0]);
         >
       </div>
 
-      <div class="field">
+      <div class="field" v-if="questionType.identifier !== 'V'">
         <label for="maxSelectableItems">Max. Selectable Items</label>
         <InputNumber
           id="maxSelectableItems"
