@@ -80,7 +80,7 @@ internal static class GetQuestionResultEndpoint
                         {
                             Title = option.Title, Description = option.Description, Score = kv.Value
                         };
-                    }).OrderBy(x => x.Title).ToList(),
+                    }).ToList(),
                     Responses = includeResponses
                         ? question.Responses.Select(r => new GetQuestionResultVoterResponse
                         {
