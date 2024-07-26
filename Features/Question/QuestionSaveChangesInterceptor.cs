@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Rankt.Entities;
-using Rankt.Entities.Common;
+﻿using Microsoft.EntityFrameworkCore;
 using Rankt.Infrastructure.Persistence;
 using Rankt.Shared;
 
