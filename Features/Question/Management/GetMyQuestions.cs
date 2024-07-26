@@ -38,7 +38,9 @@ internal static class GetMyQuestionEndpoint
                     ResponseCount = x.Responses.Count
                 }).ToList(),
                 AvailableStatusOptions = dbContext.QuestionStatus.Select(x =>
-                    new QuestionStatusOption { Identifier = x.Identifier, Name = x.Name }).ToList()
+                    new QuestionStatusOption(x.Identifier, x.Name)).ToList(),
+                AvailableTypeOptions = dbContext.QuestionType.Select(x =>
+                    new QuestionTypeOption(x.Identifier, x.Name)).ToList()
             };
         });
     }
@@ -47,6 +49,7 @@ internal static class GetMyQuestionEndpoint
     {
         public required IList<QuestionSummary> Questions { get; set; }
         public required IList<QuestionStatusOption> AvailableStatusOptions { get; set; }
+        public required IList<QuestionTypeOption> AvailableTypeOptions { get; set; }
     }
 
     private record QuestionSummary
@@ -59,9 +62,7 @@ internal static class GetMyQuestionEndpoint
         public DateTime Created { get; set; }
     }
 
-    private record QuestionStatusOption
-    {
-        public required string Identifier { get; set; }
-        public required string Name { get; set; }
-    }
+    private record QuestionStatusOption(string Identifier, string Name);
+
+    private record QuestionTypeOption(string Identifier, string Name);
 }
