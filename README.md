@@ -4,7 +4,7 @@
 [![CodeScene Code Health](https://codescene.io/projects/54502/status-badges/code-health)](https://codescene.io/)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://github.com/philipp-meier/Rankt/blob/main/LICENSE)
 
-Simple application for creating and executing ranking surveys.
+Simple application for creating and executing surveys.
 
 ## Status
 
@@ -25,7 +25,7 @@ You can find the dev-credentials (admin/admin) in the `docker-compose.yml` file 
 If you want to run this application without docker, you can just execute `dotnet run` and go to https://localhost:7151/
 or https://localhost:7151/swagger, if you are interested in the OpenAPI documentation.
 
-## Preview (beta - 30.05.2024)
+## Preview (beta - 26.07.2024)
 
 ### Admin
 
