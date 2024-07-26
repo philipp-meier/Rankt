@@ -18,8 +18,10 @@ import QuestionOptionEditList from '@/Features/AdminPage/QuestionOptionEditList.
 import type { IQuestion } from '@/Entities/Question';
 import { API_ENDPOINTS } from '@/ApiEndpoints';
 import TextService from '@/Shared/Services/TextService';
+import type { IQuestionType } from '@/Entities/QuestionType';
 
 const questions: Ref<IQuestion[]> = ref([]);
+const availableTypes: Ref<IQuestionType[]> = ref([]);
 const availableStatuses: Ref<{ label: string; value: string }[]> = ref([]);
 
 onBeforeMount(async () => {
@@ -27,6 +29,7 @@ onBeforeMount(async () => {
     if (resp.ok) {
       const jsonResponse = await resp.json();
       questions.value = jsonResponse.questions;
+      availableTypes.value = jsonResponse.availableTypeOptions;
       availableStatuses.value = jsonResponse.availableStatusOptions.map((x: any) => {
         return {
           label: x.name,
@@ -86,7 +89,7 @@ const isAddMode = ref(false);
 
 const openNew = () => {
   isAddMode.value = true;
-  questionType.value = questionTypes[0];
+  questionType.value = availableTypes.value[0];
   questionEditModel.value = { options: [] };
   submitted.value = false;
   questionDialog.value = true;
@@ -156,7 +159,8 @@ const saveQuestion = () => {
 
 const editQuestion = (selectedQuestion: IQuestion) => {
   isAddMode.value = false;
-  questionType.value = questionTypes.find((x) => x.id == selectedQuestion.type) ?? questionTypes[0];
+  questionType.value =
+    availableTypes.value.find((x) => x.id == selectedQuestion.type) ?? availableTypes.value[0];
 
   // Lazy-load options
   fetch(`${API_ENDPOINTS.Questions}/${selectedQuestion.identifier}`, { method: 'GET' }).then(
@@ -295,18 +299,7 @@ const isValidMaxSelectableItems = (question: IQuestion): boolean => {
   return question.maxSelectableItems <= question.options.length;
 };
 
-const questionTypes = [
-  {
-    id: 'RQ',
-    name: 'Ranking Question'
-  },
-  {
-    id: 'V',
-    name: 'Voting'
-  }
-];
-
-const questionType = ref(questionTypes[0]);
+const questionType = ref(availableTypes.value[0]);
 </script>
 
 <template>
@@ -455,7 +448,7 @@ const questionType = ref(questionTypes[0]);
         <Select
           id="questionTypeSelection"
           v-model="questionType"
-          :options="questionTypes"
+          :options="availableTypes"
           optionLabel="name"
           :disabled="!isAddMode"
         ></Select>
