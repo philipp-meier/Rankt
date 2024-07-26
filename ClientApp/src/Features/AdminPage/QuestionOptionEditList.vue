@@ -14,7 +14,8 @@ const options: Ref<IQuestionOption[]> = ref(props.items || []);
 
 const addOption = () => {
   options.value.push({
-    title: 'New Option'
+    title: 'New Option',
+    position: options.value.length
   });
 };
 

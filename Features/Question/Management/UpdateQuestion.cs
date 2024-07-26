@@ -72,7 +72,10 @@ internal static class UpdateQuestionEndpoint
 
             foreach (var toAdd in request.Options.Where(x => x.Identifier == null))
             {
-                question.Options.Add(new QuestionOption { Title = toAdd.Title, Description = toAdd.Description });
+                question.Options.Add(new QuestionOption
+                {
+                    Title = toAdd.Title, Position = toAdd.Position, Description = toAdd.Description
+                });
             }
 
             if (question.Type?.Identifier != QuestionType.Voting.Identifier)
@@ -95,5 +98,5 @@ internal static class UpdateQuestionEndpoint
         int? MaxSelectableItems,
         List<UpdateQuestionOptionRequest> Options);
 
-    private record UpdateQuestionOptionRequest(Guid? Identifier, string Title, string? Description);
+    private record UpdateQuestionOptionRequest(Guid? Identifier, string Title, int Position, string? Description);
 }

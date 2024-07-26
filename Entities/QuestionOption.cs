@@ -11,6 +11,7 @@ public class QuestionOption : BaseAuditableEntity
 
     public Guid ExternalIdentifier { get; set; } = Guid.NewGuid();
     public required string Title { get; set; }
+    public required int Position { get; set; }
     public string? Description { get; set; }
 }
 

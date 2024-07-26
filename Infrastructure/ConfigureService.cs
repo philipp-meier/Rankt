@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Rankt.Features.Question;
 using Rankt.Infrastructure.Persistence;
 using Rankt.Shared.Audit;
 
@@ -18,5 +19,6 @@ public static class ConfigureServices
             }));
 
         services.AddScoped<AuditableEntitySaveChangesInterceptor>();
+        services.AddScoped<QuestionSaveChangesInterceptor>();
     }
 }

@@ -3,13 +3,15 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Rankt.Entities;
+using Rankt.Features.Question;
 using Rankt.Shared.Audit;
 
 namespace Rankt.Infrastructure.Persistence;
 
 public class ApplicationDbContext(
     DbContextOptions<ApplicationDbContext> options,
-    AuditableEntitySaveChangesInterceptor auditableEntitySaveChangesInterceptor)
+    AuditableEntitySaveChangesInterceptor auditableEntitySaveChangesInterceptor,
+    QuestionSaveChangesInterceptor questionSaveChangesInterceptor)
     : IdentityDbContext<IdentityUser>(options)
 {
     internal const string AdminUserId = "118d6207-3d51-4ad0-b059-ffab450e4458";
@@ -25,6 +27,7 @@ public class ApplicationDbContext(
     {
         base.OnConfiguring(optionsBuilder);
         optionsBuilder.AddInterceptors(auditableEntitySaveChangesInterceptor);
+        optionsBuilder.AddInterceptors(questionSaveChangesInterceptor);
     }
 
     protected override void OnModelCreating(ModelBuilder builder)
