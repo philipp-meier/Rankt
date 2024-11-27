@@ -8,7 +8,7 @@ internal static class QuestionConfiguration
     internal static void MapQuestionEndpoints(this IEndpointRouteBuilder endpoints)
     {
         var executionGroup = endpoints.MapGroup("api")
-            .WithTags(["Public APIs / Allow Anonymous", "Survey Execution"])
+            .WithTags("Public APIs / Allow Anonymous", "Survey Execution")
             .RequireRateLimiting("fixed")
             .AllowAnonymous();
 
