@@ -85,7 +85,7 @@ const checkIfResultsAvailable = async (): Promise<boolean> => {
             v-model="username"
             :invalid="isInvalidUsername"
             autofocus
-            placeholder="Username"
+            placeholder="Your Name"
             @keyup.enter="continueToQuestion"
           />
           <Button label="Continue" @click="continueToQuestion" />
