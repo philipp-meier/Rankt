@@ -49,7 +49,7 @@ internal static class GetQuestionEndpoint
                 Type = question.Type.Identifier,
                 ResponseCount = question.Responses.Count,
                 MaxSelectableItems = question.MaxSelectableItems,
-                Created = question.Created,
+                Created = DateTime.SpecifyKind(question.Created, DateTimeKind.Utc),
                 Options = question.Options.Select(x => new GetQuestionOptionResponse
                 {
                     Identifier = x.ExternalIdentifier,

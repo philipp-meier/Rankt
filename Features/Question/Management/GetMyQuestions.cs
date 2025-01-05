@@ -32,7 +32,7 @@ internal static class GetMyQuestionEndpoint
                 {
                     Identifier = x.ExternalIdentifier,
                     Title = x.Title,
-                    Created = x.Created,
+                    Created = DateTime.SpecifyKind(x.Created, DateTimeKind.Utc),
                     Status = x.Status.Name,
                     Type = x.Type.Identifier,
                     ResponseCount = x.Responses.Count

@@ -20,7 +20,11 @@ import { API_ENDPOINTS } from '@/ApiEndpoints';
 import TextService from '@/Shared/Services/TextService';
 import type { IQuestionType } from '@/Entities/QuestionType';
 
-const questions: Ref<IQuestion[]> = ref([]);
+interface IAdminViewQuestion extends IQuestion {
+  createdTicks?: number;
+}
+
+const questions: Ref<IAdminViewQuestion[]> = ref([]);
 const availableTypes: Ref<IQuestionType[]> = ref([]);
 const availableStatuses: Ref<{ label: string; value: string }[]> = ref([]);
 
@@ -28,7 +32,9 @@ onBeforeMount(async () => {
   fetch(API_ENDPOINTS.ManagementQuestions, { method: 'GET' }).then(async (resp) => {
     if (resp.ok) {
       const jsonResponse = await resp.json();
-      questions.value = jsonResponse.questions;
+      questions.value = jsonResponse.questions.map((x: IQuestion) =>
+        Object.assign(x, { createdTicks: new Date(x.created!).getTime() })
+      );
       availableTypes.value = jsonResponse.availableTypeOptions;
       availableStatuses.value = jsonResponse.availableStatusOptions.map((x: any) => {
         return {
@@ -82,7 +88,7 @@ const questionDialog = ref(false);
 const deleteQuestionDialog = ref(false);
 const deleteQuestionsDialog = ref(false);
 
-const questionEditModel: Ref<IQuestion> = ref({});
+const questionEditModel: Ref<IAdminViewQuestion> = ref({});
 
 const submitted = ref(false);
 const isAddMode = ref(false);
@@ -90,7 +96,7 @@ const isAddMode = ref(false);
 const openNew = () => {
   isAddMode.value = true;
   questionType.value = availableTypes.value[0];
-  questionEditModel.value = { options: [] };
+  questionEditModel.value = { options: [], createdTicks: new Date().getTime() };
   submitted.value = false;
   questionDialog.value = true;
 };
@@ -327,7 +333,8 @@ const questionType = ref(availableTypes.value[0]);
       :value="questions"
       dataKey="identifier"
       edit-mode="cell"
-      sort-field="title"
+      sort-field="createdTicks"
+      :sort-order="-1"
       striped-rows
       @cell-edit-complete="onCellEditComplete"
     >
@@ -387,9 +394,9 @@ const questionType = ref(availableTypes.value[0]);
         </template>
       </Column>
       <Column field="responseCount" header="Responses" style="min-width: 10rem"></Column>
-      <Column field="created" header="Create Date" style="min-width: 10rem">
+      <Column field="createdTicks" header="Create Date" style="min-width: 10rem">
         <template #body="slotProps">
-          {{ TextService.formatDateFromString(slotProps.data.created) }}
+          {{ TextService.formatDateTime(new Date(slotProps.data.createdTicks)) }}
         </template>
       </Column>
       <Column :exportable="false" class="actions" style="min-width: 8rem">
@@ -434,6 +441,16 @@ const questionType = ref(availableTypes.value[0]);
         >
       </div>
 
+      <div class="field">
+        <label for="questionTypeSelection">Type</label>
+        <Select
+          id="questionTypeSelection"
+          v-model="questionType"
+          :options="availableTypes"
+          optionLabel="name"
+          :disabled="!isAddMode"
+        ></Select>
+      </div>
       <div class="field" v-if="questionType.identifier !== 'V'">
         <label for="maxSelectableItems">Max. Selectable Items</label>
         <InputNumber
@@ -445,16 +462,6 @@ const questionType = ref(availableTypes.value[0]);
         <small v-if="submitted && !isValidMaxSelectableItems(questionEditModel)" class="p-error"
           >Number must not be greater than the number of available options.</small
         >
-      </div>
-      <div class="field">
-        <label for="questionTypeSelection">Type</label>
-        <Select
-          id="questionTypeSelection"
-          v-model="questionType"
-          :options="availableTypes"
-          optionLabel="name"
-          :disabled="!isAddMode"
-        ></Select>
       </div>
 
       <br />

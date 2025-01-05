@@ -26,7 +26,7 @@ internal static class CreateQuestionResponseEndpoint
 
                 var response = new QuestionResponse
                 {
-                    Username = request.Username, Question = question, Created = DateTime.Now
+                    Username = request.Username, Question = question, Created = DateTime.UtcNow
                 };
 
                 var rank = 1;
