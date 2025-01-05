@@ -21,7 +21,7 @@ import TextService from '@/Shared/Services/TextService';
 import type { IQuestionType } from '@/Entities/QuestionType';
 
 interface IAdminViewQuestion extends IQuestion {
-  createdTicks?: number;
+  createdTimestamp?: number;
 }
 
 const questions: Ref<IAdminViewQuestion[]> = ref([]);
@@ -33,7 +33,7 @@ onBeforeMount(async () => {
     if (resp.ok) {
       const jsonResponse = await resp.json();
       questions.value = jsonResponse.questions.map((x: IQuestion) =>
-        Object.assign(x, { createdTicks: new Date(x.created!).getTime() })
+        Object.assign(x, { createdTimestamp: new Date(x.created!).getTime() })
       );
       availableTypes.value = jsonResponse.availableTypeOptions;
       availableStatuses.value = jsonResponse.availableStatusOptions.map((x: any) => {
@@ -96,7 +96,7 @@ const isAddMode = ref(false);
 const openNew = () => {
   isAddMode.value = true;
   questionType.value = availableTypes.value[0];
-  questionEditModel.value = { options: [], createdTicks: new Date().getTime() };
+  questionEditModel.value = { options: [], createdTimestamp: new Date().getTime() };
   submitted.value = false;
   questionDialog.value = true;
 };
@@ -333,7 +333,7 @@ const questionType = ref(availableTypes.value[0]);
       :value="questions"
       dataKey="identifier"
       edit-mode="cell"
-      sort-field="createdTicks"
+      sort-field="createdTimestamp"
       :sort-order="-1"
       striped-rows
       @cell-edit-complete="onCellEditComplete"
@@ -394,9 +394,9 @@ const questionType = ref(availableTypes.value[0]);
         </template>
       </Column>
       <Column field="responseCount" header="Responses" style="min-width: 10rem"></Column>
-      <Column field="createdTicks" header="Create Date" style="min-width: 10rem">
+      <Column field="createdTimestamp" header="Create Date" style="min-width: 10rem">
         <template #body="slotProps">
-          {{ TextService.formatDateTime(new Date(slotProps.data.createdTicks)) }}
+          {{ TextService.formatDateTime(new Date(slotProps.data.createdTimestamp)) }}
         </template>
       </Column>
       <Column :exportable="false" class="actions" style="min-width: 8rem">
@@ -423,7 +423,7 @@ const questionType = ref(availableTypes.value[0]);
     <Dialog
       v-model:visible="questionDialog"
       :modal="true"
-      :style="{ width: '450px' }"
+      :style="{ width: '650px' }"
       class="p-fluid"
       header="Question Details"
     >

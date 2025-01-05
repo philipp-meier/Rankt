@@ -14,7 +14,7 @@ const options: Ref<IQuestionOption[]> = ref(props.items || []);
 
 const addOption = () => {
   options.value.push({
-    title: 'New Option',
+    title: '',
     position: options.value.length
   });
 };
@@ -44,12 +44,12 @@ const deleteOption = (item: IQuestionOption) => {
       @cell-edit-complete="onCellEditComplete"
     >
       <Column field="title" header="Title">
-        <template #editor="{ data, field }">
-          <InputText v-model="data[field]" autofocus />
+        <template #body="{ data, field }">
+          <InputText v-model="data[field]" autofocus placeholder="Enter title" />
         </template>
       </Column>
       <Column field="description" header="Description">
-        <template #editor="{ data, field }">
+        <template #body="{ data, field }">
           <InputText v-model="data[field]" autofocus />
         </template>
       </Column>
