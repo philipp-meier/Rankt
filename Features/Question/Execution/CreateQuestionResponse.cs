@@ -24,7 +24,10 @@ internal static class CreateQuestionResponseEndpoint
                     return Results.NotFound();
                 }
 
-                var response = new QuestionResponse { Username = request.Username, Question = question };
+                var response = new QuestionResponse
+                {
+                    Username = request.Username, Question = question, Created = DateTime.Now
+                };
 
                 var rank = 1;
                 foreach (var optionRanking in request.Options.OrderBy(x => x.Rank))
