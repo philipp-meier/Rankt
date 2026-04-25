@@ -7,7 +7,7 @@ namespace Rankt.Entities;
 public class QuestionOption : BaseAuditableEntity
 {
     public int QuestionId { get; set; }
-    public Question Question { get; set; }
+    public Question Question { get; set; } = null!;
 
     public Guid ExternalIdentifier { get; set; } = Guid.NewGuid();
     public required string Title { get; set; }

@@ -9,7 +9,9 @@ public class Question : BaseAuditableEntity
     public Guid ExternalIdentifier { get; set; } = Guid.NewGuid();
 
     public required string Title { get; set; }
+    public int StatusId { get; set; }
     public required QuestionStatus Status { get; set; }
+    public int TypeId { get; set; }
     public required QuestionType Type { get; set; }
     public int? MaxSelectableItems { get; set; }
 
@@ -25,10 +27,16 @@ internal sealed class QuestionConfiguration : IEntityTypeConfiguration<Question>
             .HasMaxLength(100)
             .IsRequired();
 
-        builder.Navigation(x => x.Status)
+        builder.HasOne(x => x.Status)
+            .WithMany()
+            .HasForeignKey(x => x.StatusId)
+            .OnDelete(DeleteBehavior.Restrict)
             .IsRequired();
 
-        builder.Navigation(x => x.Type)
+        builder.HasOne(x => x.Type)
+            .WithMany()
+            .HasForeignKey(x => x.TypeId)
+            .OnDelete(DeleteBehavior.Restrict)
             .IsRequired();
 
         builder.HasMany(x => x.Options)
