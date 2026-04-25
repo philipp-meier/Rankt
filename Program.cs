@@ -13,9 +13,8 @@ builder.Configuration.AddEnvironmentVariables();
 builder.WebHost.UseKestrel(option => option.AddServerHeader = false);
 
 // Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddOpenApi();
 
 // TODO: Clean up and move to infrastructure/web/...
 builder.Services.AddInfrastructureServices(builder.Configuration);
@@ -47,7 +46,7 @@ builder.Services.AddAuthorization();
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
     options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
-    options.KnownNetworks.Clear();
+    options.KnownIPNetworks.Clear();
     options.KnownProxies.Clear();
 });
 
@@ -63,8 +62,7 @@ app.UseHsts();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.MapOpenApi();
     app.UseDeveloperExceptionPage();
 }
 

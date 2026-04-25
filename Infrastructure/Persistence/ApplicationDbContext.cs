@@ -15,6 +15,8 @@ public class ApplicationDbContext(
     : IdentityDbContext<IdentityUser>(options)
 {
     internal const string AdminUserId = "118d6207-3d51-4ad0-b059-ffab450e4458";
+    private const string AdminConcurrencyStamp = "8e3a762a-a5f4-471f-91d9-953024bdde16";
+    private const string AdminSecurityStamp = "803666ec-9afa-4716-a2b7-8c1961b6d8dc";
 
     public DbSet<Question> Questions => Set<Question>();
     public DbSet<QuestionOption> QuestionOptions => Set<QuestionOption>();
@@ -65,11 +67,16 @@ public class ApplicationDbContext(
 
         var adminUser = new IdentityUser
         {
-            Id = AdminUserId, UserName = "admin", NormalizedUserName = "ADMIN", LockoutEnabled = true
+            Id = AdminUserId,
+            UserName = "admin",
+            NormalizedUserName = "ADMIN",
+            LockoutEnabled = true,
+            ConcurrencyStamp = AdminConcurrencyStamp,
+            SecurityStamp = AdminSecurityStamp,
+            // No password hash in seed — the actual password is set at startup from
+            // configuration (AppSetup:AdminPassword) so no credentials are committed to source.
+            PasswordHash = null
         };
-
-        var pwHasher = new PasswordHasher<IdentityUser>();
-        adminUser.PasswordHash = pwHasher.HashPassword(adminUser, "admin");
 
         builder.Entity<IdentityUser>().HasData(adminUser);
 
