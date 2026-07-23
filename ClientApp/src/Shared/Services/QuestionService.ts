@@ -22,7 +22,7 @@ export class QuestionService {
     this.setState(state);
   }
 
-  private static getState(): UserState {
+  private static getState(): UserState | null {
     const stateObj = localStorage.getItem('userState');
     return stateObj ? JSON.parse(stateObj) : null;
   }
